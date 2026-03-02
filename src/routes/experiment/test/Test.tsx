@@ -8,6 +8,9 @@ import Section1Finish from "./learning-sections/section1/Section1Finish";
 
 import { AnimatePresence, motion } from "framer-motion";
 import Section2 from "./learning-sections/section2/Section2";
+import Section2Test from "./learning-sections/section2/Section2Test";
+import Section2Finish from "./learning-sections/section2/Section2Finish";
+import Section3 from "./learning-sections/section3/Section3";
 
 function formatNumber(number: number) {
   if (number >= 1000000) {
@@ -25,12 +28,18 @@ function TestInner({ participantId }: Props) {
   const ctx = useContext(TestContext);
   if (!ctx) return null;
 
+  const allowedStages = [1,4]
+
   const questions = [
     <Section1 key="section1" />,
     <Section1Test key="section1test" />,
     <Section1Finish key="section1finish" />,
 
     <Section2 key="section2" />,
+    <Section2Test key="section2test" />,
+    <Section2Finish key="section2finish" />,
+
+    <Section3 key="section3" />,
   ];
 
   return (
@@ -47,7 +56,7 @@ function TestInner({ participantId }: Props) {
 
           {/* Score + Streak (Hidden on Stage 0) */}
           <AnimatePresence>
-            {ctx.currentIndex > 0 && ctx.currentIndex != 3 && (
+            {allowedStages.includes(ctx.currentIndex) && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}

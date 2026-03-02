@@ -1,5 +1,5 @@
 import confetti from "canvas-confetti";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import TestContext from "../../TestContext";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,14 @@ function formatNumber(number: number) {
 }
 
 export default function Section1Finish() {
+  const [nextSectionDisabled, setNextSectionDisabled] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setNextSectionDisabled(false);
+    }, 5000);
+  }, [nextSectionDisabled]);
+
   const ctx = useContext(TestContext);
 
   const fireConfetti = () => {
@@ -44,13 +52,20 @@ export default function Section1Finish() {
   };
 
   useEffect(() => {
-    fireConfetti();
-  }, []);
-
-  useEffect(() => {
     if (ctx && ctx.testMilestonesType.section1EndTime === null) {
       ctx.testMilestonesType.setSection1EndTime(Date.now());
     }
+  }, [ctx]);
+
+  useEffect(() => {
+    if (
+      ctx &&
+      ctx.testMilestonesType.section1Correct /
+        (ctx.testMilestonesType.section1Correct +
+          ctx.testMilestonesType.section1Incorrect) >
+        0.5
+    )
+      fireConfetti();
   }, [ctx]);
 
   if (!ctx) return null;
@@ -104,6 +119,7 @@ export default function Section1Finish() {
       </p>
 
       {/* 🏆 Pts Burst */}
+
       <motion.div
         key={ptsGained}
         initial={{ scale: 1.4 }}
@@ -136,7 +152,8 @@ export default function Section1Finish() {
         onClick={() => {
           ctx.next();
         }}
-        className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white hover:cursor-pointer transition-all duration-300 rounded-full font-semibold shadow-sm mt-4"
+        className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white hover:cursor-pointer hover:drop-shadow-xl transition-all duration-300 rounded-full font-semibold shadow-sm mt-4 disabled:opacity-25 disabled:bg-white disabled:border-black disabled:text-black disabled:cursor-not-allowed"
+        disabled={nextSectionDisabled}
       >
         Next section
       </button>

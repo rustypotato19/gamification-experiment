@@ -24,9 +24,10 @@ export default function Section2() {
       title: "Section 2: How Big Is AI's Environmental Impact?",
       text: (
         <>
-          In Section 1, we explored how AI uses energy and water. Now let's look
-          at <strong>how much</strong> it actually consumes - and why scale
-          matters.
+          In Section 1, we explored how AI uses energy and water.
+          <br />
+          Now let's look at <strong>how much</strong> it actually consumes - and
+          why scale matters.
         </>
       ),
     },
@@ -35,13 +36,14 @@ export default function Section2() {
       text: (
         <>
           A single AI query may only use a small amount of energy - often
-          measured in <strong>milligrams (1/1000 grams) of CO₂</strong>.
+          measured in <strong>milligrams (1/1000 grams) of CO₂</strong>
           <br />
           <br />
           But millions of users making billions of requests every day quickly
           adds up.
         </>
       ),
+      image: "/gifs/multiplying-co2.gif",
     },
     {
       title: "Scale Multiplies Impact",
@@ -52,9 +54,10 @@ export default function Section2() {
           data continuously.
           <br />
           <br />
-          Small x billions = large environmental impact.
+          billions of small impacts = one large environmental impact.
         </>
       ),
+      image: "/gifs/growing-queries.gif"
     },
     {
       title: "Training vs Daily Use",
@@ -64,13 +67,14 @@ export default function Section2() {
           energy intensive.
           <br />
           <br />
-          Training can emit as much CO₂ as several cars over their lifetime.
+          Training can emit as much CO₂ as <strong>several cars</strong> over their lifetime.
           <br />
           <br />
           Daily user queries (inference) also consume energy, but typically far
           less than initial training.
         </>
       ),
+      image: "/images/AI-training-cars.png"
     },
     {
       title: "Model Size Matters",
@@ -85,6 +89,7 @@ export default function Section2() {
           increases significantly.
         </>
       ),
+      image: "/images/complexity-env-impact-graph.png"
     },
     {
       title: "Energy Source Makes a Difference",
@@ -98,6 +103,7 @@ export default function Section2() {
           consequences depending on the energy mix.
         </>
       ),
+      image: "/images/energies.png",
     },
     {
       title: "User Behaviour Also Matters",
@@ -111,6 +117,7 @@ export default function Section2() {
           environmental impact.
         </>
       ),
+      image: "/images/intentional-prompts.png",
       isFinal: true,
     },
   ];
@@ -134,7 +141,7 @@ export default function Section2() {
       <div className="absolute top-12 w-full max-w-md">
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-blue-600"
+            className="h-full bg-orange-400"
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.5 }}
@@ -161,9 +168,13 @@ export default function Section2() {
 
           <p className="text-sm md:text-base">{steps[stepIndex].text}</p>
 
+          <div className="flex justify-center items-center overflow-clip max-w-120 max-h-80">
+            <img className="max-w-full h-full" src={steps[stepIndex].image}/>
+          </div>
+
           <button
             onClick={handleNext}
-            className="mt-6 bg-slate-900 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-slate-700 hover:cursor-pointer transition"
+            className="mt-4 bg-orange-500 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-orange-700 hover:cursor-pointer transition"
           >
             {isFinalStep ? "Continue" : "Next"}
           </button>

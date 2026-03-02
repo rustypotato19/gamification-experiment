@@ -171,11 +171,13 @@ export default function Section1() {
           <p className="text-sm md:text-base">{steps[stepIndex].text}</p>
 
           {steps[stepIndex].image && (
-            <img
-              src={steps[stepIndex].image}
-              alt={steps[stepIndex].title}
-              className="mt-4 w-full rounded"
-            />
+            <div className="w-fit max-w-80">
+              <img
+                src={steps[stepIndex].image}
+                alt={steps[stepIndex].title}
+                className="mt-4 w-full rounded"
+              />
+            </div>
           )}
 
           <button
