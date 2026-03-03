@@ -27,19 +27,19 @@ export default function Section1Finish() {
   const ctx = useContext(TestContext);
 
   const fireConfetti = () => {
-    const duration = 3000;
+    const duration = 2000;
     const end = getDateNow() + duration;
 
     const frame = () => {
       confetti({
-        particleCount: 6,
+        particleCount: 3,
         angle: 60,
         spread: 55,
         origin: { x: 0.01, y: 0.7 },
       });
 
       confetti({
-        particleCount: 5,
+        particleCount: 3,
         angle: 120,
         spread: 55,
         origin: { x: 0.99, y: 0.7 },

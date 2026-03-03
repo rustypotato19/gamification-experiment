@@ -37,7 +37,20 @@ export type TestMilestonesType = {
   setSection2EndTime: (miliseconds: number) => void;
   setSection2Correct: (numCorrect: number) => void;
   setSection2Incorrect: (numIncorrect: number) => void;
-} 
+
+  section3Pts: number;
+  section3Streak: number;
+  section3StartTime: number | null;
+  section3EndTime: number | null;
+  section3Correct: number;
+  section3Incorrect: number;
+  setSection3Pts: (pts: number) => void;
+  setSection3Streak: (streak: number) => void;
+  setSection3StartTime: (miliseconds: number) => void;
+  setSection3EndTime: (miliseconds: number) => void;
+  setSection3Correct: (numCorrect: number) => void;
+  setSection3Incorrect: (numIncorrect: number) => void;
+};
 
 const TestContext = createContext<TestContextType | null>(null);
 

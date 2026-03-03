@@ -11,6 +11,8 @@ import Section2 from "./learning-sections/section2/Section2";
 import Section2Test from "./learning-sections/section2/Section2Test";
 import Section2Finish from "./learning-sections/section2/Section2Finish";
 import Section3 from "./learning-sections/section3/Section3";
+import Section3Test from "./learning-sections/section3/Section3Test";
+import Section3Finish from "./learning-sections/section3/Section3Finish";
 
 function formatNumber(number: number) {
   if (number >= 1000000) {
@@ -39,6 +41,8 @@ function TestInner({ participantId }: Props) {
     <Section2Finish key="section2finish" />,
 
     <Section3 key="section3" />,
+    <Section3Test key="section3test"/>,
+    <Section3Finish key="section3finish"/>,
   ];
 
   useEffect(() => {
@@ -104,9 +108,9 @@ function TestInner({ participantId }: Props) {
       window.localStorage.removeItem("consentGiven");
       window.localStorage.removeItem("consentTimestamp");
       window.location.href = "/consent";
-      alert(
+      /* alert(
         "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-      );
+      ); */
       return;
     }
 
@@ -129,9 +133,9 @@ function TestInner({ participantId }: Props) {
     }
 
     window.location.href = "/withdrawn";
-    alert(
+    /* alert(
       "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-    );
+    ); */
   };
 
   if (!ctx) return null;

@@ -13,7 +13,9 @@ export default function TestProvider({ children }: Props) {
   // Section 1
   const [section1Pts, setSection1Pts] = useState(0);
   const [section1Streak, setSection1Streak] = useState(0);
-  const [section1StartTime, setSection1StartTime] = useState<number | null>(null);
+  const [section1StartTime, setSection1StartTime] = useState<number | null>(
+    null,
+  );
   const [section1EndTime, setSection1EndTime] = useState<number | null>(null);
   const [section1Correct, setSection1Correct] = useState(0);
   const [section1Incorrect, setSection1Incorrect] = useState(0);
@@ -21,10 +23,22 @@ export default function TestProvider({ children }: Props) {
   // Section 2
   const [section2Pts, setSection2Pts] = useState(0);
   const [section2Streak, setSection2Streak] = useState(0);
-  const [section2StartTime, setSection2StartTime] = useState<number | null>(null);
+  const [section2StartTime, setSection2StartTime] = useState<number | null>(
+    null,
+  );
   const [section2EndTime, setSection2EndTime] = useState<number | null>(null);
   const [section2Correct, setSection2Correct] = useState(0);
   const [section2Incorrect, setSection2Incorrect] = useState(0);
+
+  // Section 3
+  const [section3Pts, setSection3Pts] = useState(0);
+  const [section3Streak, setSection3Streak] = useState(0);
+  const [section3StartTime, setSection3StartTime] = useState<number | null>(
+    null,
+  );
+  const [section3EndTime, setSection3EndTime] = useState<number | null>(null);
+  const [section3Correct, setSection3Correct] = useState(0);
+  const [section3Incorrect, setSection3Incorrect] = useState(0);
 
   const addCorrect = (multiplier?: number) => {
     const basePts = multiplier ? multiplier * 100 : 100;
@@ -33,17 +47,21 @@ export default function TestProvider({ children }: Props) {
     setPts((x) => x + basePts * streakMultiplier);
     setStreak((s) => s + 1);
 
-    if (currentIndex <= 5) {
+    if (currentIndex <= 8) {
       // Section 1
       if (currentIndex < 2) {
         setSection1Pts((p) => p + basePts * streakMultiplier);
         setSection1Streak((s) => s + 1);
         setSection1Correct((c) => c + 1);
-      } else {
+      } else if (currentIndex >= 2 && currentIndex < 5) {
         // Section 2
         setSection2Pts((p) => p + basePts * streakMultiplier);
         setSection2Streak((s) => s + 1);
         setSection2Correct((c) => c + 1);
+      } else {
+        setSection3Pts((p) => p + basePts * streakMultiplier);
+        setSection3Streak((s) => s + 1);
+        setSection3Correct((c) => c + 1);
       }
     }
   };
@@ -51,9 +69,11 @@ export default function TestProvider({ children }: Props) {
   const addIncorrect = () => {
     setStreak(0);
 
-    if (currentIndex <= 5) {
+    if (currentIndex <= 8) {
       if (currentIndex < 2) setSection1Incorrect((c) => c + 1);
-      else setSection2Incorrect((c) => c + 1);
+      else if (currentIndex >= 2 && currentIndex < 5)
+        setSection2Incorrect((c) => c + 1);
+      else setSection3Incorrect((c) => c + 1);
     }
   };
 
@@ -87,6 +107,19 @@ export default function TestProvider({ children }: Props) {
     setSection2EndTime,
     setSection2Correct,
     setSection2Incorrect,
+
+    section3Pts,
+    section3Streak,
+    section3StartTime,
+    section3EndTime,
+    section3Correct,
+    section3Incorrect,
+    setSection3Pts,
+    setSection3Streak,
+    setSection3StartTime,
+    setSection3EndTime,
+    setSection3Correct,
+    setSection3Incorrect,
   };
 
   return (
