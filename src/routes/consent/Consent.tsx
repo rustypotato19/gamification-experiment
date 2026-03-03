@@ -56,6 +56,10 @@ async function postJson<T>(
 export default function InfoConsentPage() {
   const experimentEndsISO = "2026-03-31T23:59:59";
 
+  useEffect(() => {
+    if (localStorage.getItem("withdrawn")) window.location.href = "/withdrawn";
+  });
+
   const atExperiment =
     window.localStorage.getItem("studyStage") === "experiment";
 
@@ -211,7 +215,8 @@ export default function InfoConsentPage() {
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">
-              You have registered obtained consent and are registered in the study.
+              You have registered obtained consent and are registered in the
+              study.
             </h2>
             <p className="mt-2 text-sm text-slate-600">
               Your participant ID is:{" "}
@@ -262,7 +267,8 @@ export default function InfoConsentPage() {
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">
-              You have already registered consent and are at the experiment stage.
+              You have already registered consent and are at the experiment
+              stage.
             </h2>
             <p className="mt-2 text-sm text-slate-600">
               Your participant ID is:{" "}

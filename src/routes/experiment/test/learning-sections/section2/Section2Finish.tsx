@@ -56,27 +56,19 @@ export default function Section2Finish() {
     }
   }, [ctx]);
 
-  if (!ctx) return null;
+  const pts = ctx ? ctx.testMilestonesType.section2Pts : 0;
+  const streak = ctx ? ctx.testMilestonesType.section2Streak : 0;
+  const correct = ctx ? ctx.testMilestonesType.section2Correct : 0;
+  const incorrect = ctx ? ctx.testMilestonesType.section2Incorrect : 0;
+  const startTime = ctx ? ctx.testMilestonesType.section2StartTime : 0;
+  const endTime = ctx ? ctx.testMilestonesType.section2EndTime : 0;
 
-  const {
-    section2Pts,
-    section2Streak,
-    section2Correct,
-    section2Incorrect,
-    section2StartTime,
-    section2EndTime,
-  } = ctx.testMilestonesType;
+  const total = correct + incorrect;
+  const scorePercent = total > 0 ? Math.round((correct / total) * 100) : 0;
 
-  const total = section2Correct + section2Incorrect;
-  const scorePercent =
-    total > 0 ? Math.round((section2Correct / total) * 100) : 0;
+  const rawTimeTaken = startTime && endTime ? endTime - startTime : 0;
 
-  const rawTime =
-    section2StartTime && section2EndTime
-      ? section2EndTime - section2StartTime
-      : 0;
-
-  const seconds = Math.floor(rawTime / 1000);
+  const seconds = Math.floor(rawTimeTaken / 1000);
 
   const timeTaken =
     seconds >= 3600
@@ -84,6 +76,31 @@ export default function Section2Finish() {
       : seconds >= 60
         ? `${Math.floor(seconds / 60)}m ${seconds % 60}s`
         : `${seconds}s`;
+
+  const participantId = localStorage.getItem("participantId")
+    ? localStorage.getItem("participantId")
+    : "";
+
+  useEffect(() => {
+    async function upload() {
+      await fetch("/api/section-complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          participantId,
+          sectionNumber: 2,
+          timeSeconds: rawTimeTaken / 1000,
+          score: correct,
+          total: total,
+          percentage: scorePercent,
+        }),
+      });
+    }
+
+    upload();
+  }, [correct, participantId, rawTimeTaken, scorePercent, total]);
+
+  if (!ctx) return null;
 
   return (
     <motion.div
@@ -94,14 +111,14 @@ export default function Section2Finish() {
       <h2 className="text-3xl font-bold mb-2">🎉 Section 2 Complete!</h2>
 
       <motion.div
-        key={section2Pts}
+        key={pts}
         initial={{ scale: 1.4 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.4 }}
         className="mb-10"
       >
         <div className="text-5xl font-extrabold text-orange-500">
-          +{formatNumber(section2Pts)} Points
+          +{formatNumber(pts)} Points
         </div>
         <p className="text-sm text-slate-500 mt-1">
           Total Points: {ctx.pts.toLocaleString()}
@@ -109,10 +126,10 @@ export default function Section2Finish() {
       </motion.div>
 
       <div className="grid grid-cols-2 gap-6 w-full mb-10">
-        <StatCard label="🔥 Streak Gained" value={section2Streak} />
+        <StatCard label="🔥 Streak Gained" value={streak} />
         <StatCard label="📈 Total Streak" value={ctx.streak} />
         <StatCard label="⏱ Time Taken" value={`${timeTaken}`} />
-        <StatCard label="🎯 Score" value={`${section2Correct}/${total}`} />
+        <StatCard label="🎯 Score" value={`${correct}/${total}`} />
       </div>
 
       <div className="bg-orange-100 text-orange-700 px-6 py-3 rounded-full font-semibold shadow-sm">

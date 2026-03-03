@@ -1,4 +1,7 @@
 export default function Withdrawn() {
+
+    localStorage.setItem("withdrawn", "true")
+
     return (
         <div className="min-h-screen bg-neutral-200 text-slate-900 flex items-center justify-center">
             <div className="max-w-2xl p-6 bg-white rounded-lg shadow-md">

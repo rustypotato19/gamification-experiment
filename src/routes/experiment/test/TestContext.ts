@@ -4,6 +4,7 @@ export type TestContextType = {
   pts: number;
   streak: number;
   currentIndex: number;
+  setCurrentIndex: (index: number) => void;
   next: () => void;
   addCorrect: (multiplier?: number) => void;
   addIncorrect: () => void;

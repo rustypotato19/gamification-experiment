@@ -68,8 +68,6 @@ export default function Section1Finish() {
       fireConfetti();
   }, [ctx]);
 
-  if (!ctx) return null;
-
   const formatTime = (time: number) => {
     const seconds = time < 0 ? (time * -1) / 1000 : time / 1000;
     if (seconds / 3600 >= 1)
@@ -79,19 +77,20 @@ export default function Section1Finish() {
     return `${Math.floor(seconds)}s`;
   };
 
-  const pts = ctx.pts;
-  const streak = ctx.streak;
+  const pts = ctx ? ctx.pts : 0;
+  const streak = ctx ? ctx.streak : 0;
 
-  const ptsGained = ctx.testMilestonesType.section1Pts;
-  const streakGained = ctx.testMilestonesType.section1Streak;
+  const ptsGained = ctx ? ctx.testMilestonesType.section1Pts : 0;
+  const streakGained = ctx ? ctx.testMilestonesType.section1Streak : 0;
 
-  const correct = ctx.testMilestonesType.section1Correct;
-  const incorrect = ctx.testMilestonesType.section1Incorrect;
+  const correct = ctx ? ctx.testMilestonesType.section1Correct : 0;
+  const incorrect = ctx ? ctx.testMilestonesType.section1Incorrect : 0;
   const total = correct + incorrect;
 
   const scorePercent = Math.round((correct / total) * 100);
 
   const rawTimeTaken =
+    ctx &&
     ctx.testMilestonesType.section1StartTime !== null &&
     ctx.testMilestonesType.section1EndTime !== null
       ? ctx.testMilestonesType.section1EndTime -
@@ -101,9 +100,34 @@ export default function Section1Finish() {
   const timeTaken = formatTime(rawTimeTaken);
   if (timeTaken == "0s") {
     console.error(
-      `End Time: ${ctx.testMilestonesType.section1EndTime}\nStart Time: ${ctx.testMilestonesType.section1StartTime}\nTaken: ${timeTaken}`,
+      `End Time: ${ctx && ctx.testMilestonesType.section1EndTime}\nStart Time: ${ctx && ctx.testMilestonesType.section1StartTime}\nTaken: ${timeTaken}`,
     );
   }
+
+  const participantId = localStorage.getItem("participantId")
+    ? localStorage.getItem("participantId")
+    : "";
+
+  useEffect(() => {
+    async function upload() {
+      await fetch("/api/section-complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          participantId,
+          sectionNumber: 1,
+          timeSeconds: rawTimeTaken / 1000,
+          score: correct,
+          total: total,
+          percentage: scorePercent,
+        }),
+      });
+    }
+
+    upload();
+  }, [correct, participantId, rawTimeTaken, scorePercent, total]);
+
+  if (!ctx) return null;
 
   return (
     <motion.div

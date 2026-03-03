@@ -95,6 +95,7 @@ export default function TestProvider({ children }: Props) {
         pts,
         streak,
         currentIndex,
+        setCurrentIndex,
         next,
         addCorrect,
         addIncorrect,

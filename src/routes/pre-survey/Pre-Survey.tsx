@@ -210,7 +210,7 @@ const PRE_QUESTIONS: Question[] = [
     prompt:
       "Which resource is most heavily consumed by data centres running generative AI models?",
     options: { a: "Water", b: "Electricity", c: "Rare earth metals" },
-  }
+  },
 ];
 
 export default function PreSurvey() {
@@ -457,8 +457,8 @@ export default function PreSurvey() {
 
             <p className="mt-3 text-xs text-slate-500">
               Submission is sent to your backend API (
-              <span className="font-mono">/api/surveys</span>) and
-              stored in SQL.
+              <span className="font-mono">/api/surveys</span>) and stored in
+              SQL.
             </p>
           </section>
         </main>

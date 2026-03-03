@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import TestProvider from "./TestProvider";
 import TestContext from "./TestContext";
 
@@ -26,9 +26,8 @@ type Props = {
 
 function TestInner({ participantId }: Props) {
   const ctx = useContext(TestContext);
-  if (!ctx) return null;
 
-  const allowedStages = [1,4]
+  const allowedStages = [1, 4];
 
   const questions = [
     <Section1 key="section1" />,
@@ -42,6 +41,101 @@ function TestInner({ participantId }: Props) {
     <Section3 key="section3" />,
   ];
 
+  useEffect(() => {
+    async function init() {
+      if (!ctx) return;
+
+      const res = await fetch(`/api/section-progress/${participantId}`);
+      const data = await res.json();
+
+      if (!data.ok) return;
+
+      const last = data.progress.last_completed_stage;
+
+      if (last === 0) ctx.setCurrentIndex(0);
+      else if (last === 1) ctx.setCurrentIndex(3);
+      else if (last === 2) ctx.setCurrentIndex(6);
+      else if (last === 3) ctx.setCurrentIndex(6);
+    }
+
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [showWithrawPopup, setShowWithdrawPopup] = useState(false);
+
+  const [dbBusy, setDbBusy] = useState(false);
+  const [dbError, setDbError] = useState<string | null>(null);
+
+  async function postJson<T>(
+    url: string,
+    body: unknown,
+    signal?: AbortSignal,
+  ): Promise<{ ok: true; data: T } | { ok: false; error: string }> {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal,
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        return { ok: false, error: `HTTP ${res.status} ${text}`.trim() };
+      }
+
+      const data = (await res.json().catch(() => null)) as T | null;
+      return { ok: true, data: data ?? ({} as T) };
+    } catch (e) {
+      return {
+        ok: false,
+        error: e instanceof Error ? e.message : "Unknown network error",
+      };
+    }
+  }
+
+  const onWithdraw = async () => {
+    setDbError(null);
+
+    const pid = participantId;
+    if (!pid) {
+      // Still clear local state
+      window.localStorage.removeItem("consentGiven");
+      window.localStorage.removeItem("consentTimestamp");
+      window.location.href = "/consent";
+      alert(
+        "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
+      );
+      return;
+    }
+
+    setDbBusy(true);
+
+    // Try to mark withdrawn in DB
+    const res = await postJson<{ ok: boolean }>(`/api/withdraw`, {
+      participantId: pid,
+    });
+
+    // Clear entire local state regardless
+    window.localStorage.clear();
+
+    setDbBusy(false);
+
+    if (!res.ok) {
+      setDbError(
+        `Withdrawn locally, but the server could not be reached. (${res.error})`,
+      );
+    }
+
+    window.location.href = "/withdrawn";
+    alert(
+      "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
+    );
+  };
+
+  if (!ctx) return null;
+
   return (
     <div className="h-full flex flex-col p-4 md:p-6 bg-neutral-200">
       <main className="flex-1 bg-white rounded-3xl shadow-xl p-8 flex flex-col">
@@ -52,7 +146,72 @@ function TestInner({ participantId }: Props) {
               Participant: {participantId}
             </p>
             <h1 className="text-2xl font-bold">AI Impact Mission 🚀</h1>
+            <button
+              onClick={() => {
+                setShowWithdrawPopup(true);
+              }}
+              className="w-fit h-fit px-4 py-2 bg-red-700 text-white font-bold rounded-2xl text-sm relative top-4 hover:bg-red-500 hover:cursor-pointer"
+            >
+              Withdraw
+            </button>
           </div>
+
+          {showWithrawPopup && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">
+              <div className="flex gap-3 flex-col justify-center items-center w-fit h-fit bg-white py-8 px-16 rounded-2xl border drop-shadow-2xl">
+                <h1 className="font-bold text-2xl mb-8">
+                  Confirm Withdrawal from Study
+                </h1>
+                {dbError ? (
+                  <>
+                    <p>Error: {dbError}</p>
+                    <p>Unable to process withdrawal at this time</p>
+                    <p>
+                      Please reach out to me at{" "}
+                      <strong>konrad.mitura@yorksj.ac.uk</strong>, or{" "}
+                      <strong>konradmitura8@gmail.com</strong> stating your
+                      participant id and the error above.
+                    </p>
+                    <p>Participant ID: {participantId}</p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      If you withdraw from this study, you will not be able to
+                      participate again.
+                    </p>
+                    <p>
+                      Your records, scores and progress may still be retained
+                      until the deadline for this dissertation
+                    </p>
+                    <p className="mt-6 font-semibold">
+                      Do you still wish to withdraw?
+                    </p>
+                  </>
+                )}
+                <div className="w-2/3 flex items-center justify-between mt-6">
+                  <button
+                    onClick={() => {
+                      setShowWithdrawPopup(false);
+                    }}
+                    className="text-xl font-bold bg-red-700 text-white px-3 py-1 rounded-xl hover:bg-red-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                    disabled={dbBusy}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      onWithdraw();
+                    }}
+                    className="text-xl font-bold bg-emerald-700 text-white px-3 py-1 rounded-xl hover:bg-emerald-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                    disabled={dbBusy}
+                  >
+                    Withdraw
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Score + Streak (Hidden on Stage 0) */}
           <AnimatePresence>
