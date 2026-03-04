@@ -3,15 +3,24 @@ import TestContext from "../../TestContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Step = {
-  title: string;
-  text: React.ReactNode;
-  image?: string;
+  title: string | React.ReactNode;
+  text: string | React.ReactNode;
+  bg_image?: string;
   isFinal?: boolean;
 };
 
 export default function Section1() {
   const [stepIndex, setStepIndex] = useState(0);
   const [showGpuTooltip, setShowGpuTooltip] = useState(false);
+
+  const [hugeText, setHugeText] = useState(false);
+
+  useEffect(() => {
+    if (stepIndex == 3)
+      setTimeout(() => {
+        setHugeText(true);
+      }, 1500);
+  }, [stepIndex]);
 
   const ctx = useContext(TestContext);
 
@@ -33,91 +42,144 @@ export default function Section1() {
 
   const steps: Step[] = [
     {
-      title: "Section 1: AI's Hidden Environmental Impact",
+      title: (
+        <div className="flex flex-col gap-4">
+          <span className="text-2xl">Section 1 of 3</span>
+          What is AI? And how does it affect the environment?
+        </div>
+      ),
       text: (
-        <>
-          In this section, we'll explore how AI systems contribute to
-          environmental challenges and why energy consumption matters.
-        </>
+        <div className="flex justify-center items-center">
+          <p className="text-lg mt-4">
+            In this section, you'll be introduced to "<b>AI</b>", it's general
+            impacts on the environment and why these impacts are so difficult to
+            see.
+          </p>
+          <img src="/images/ai-robot.png" className="h-50" />
+        </div>
       ),
     },
     {
-      title: "AI's CO₂ Emissions and Water Use",
+      title: 'What actually is "AI"?',
       text: (
-        <>
-          Training large AI models consumes significant electricity, which
-          results in CO₂ emissions. Data centers also use large amounts of water
-          for cooling.
-        </>
+        <div className="flex flex-col justify-center items-center gap-2">
+          <p>
+            <b>AI</b> is a scary term, but what we've come to know as AI - from
+            the likes of ChatGPT, Gemini etc. - are actually{" "}
+            <b>Large Language Models (LLMs)</b>.<br />
+          </p>
+          <img
+            src="/images/different-languages.jpg"
+            className="max-h-40 w-80"
+          />
+        </div>
       ),
-      image: "/images/data-center-co2.png",
     },
     {
-      title: "AI's Energy Use and Efficiency",
+      title: "LLMs",
       text: (
-        <>
-          <strong>Optimising</strong> AI models and infrastructure can{" "}
-          <em>reduce energy use</em>. Smaller, more efficient models consume
-          less power while still performing well.
-        </>
+        <div className="flex flex-col items-center justify-center gap-3">
+          <p>
+            LLMs <i>scan millions of text files</i>, then based on those,
+            they'll use maths to determine which word should come next.
+          </p>
+          <img
+            src="/gifs/hackerScreen.gif"
+            className="w-full h-30 rounded-2xl drop-shadow-xl border"
+          />
+          <p>
+            LLMs don't <b>understand</b>, they calculate what the most
+            statistically appropriate response is.
+          </p>
+          <p>
+            Modern day LLMs can have their behaviour manually altered during the
+            training process, but this is complicated.
+          </p>
+        </div>
       ),
-      image: "/images/energy-efficiency.png",
     },
     {
-      title: "Data Center Scale and Hardware Use",
+      title: "Why does this matter?",
       text: (
-        <>
-          AI computations happen on thousands of{" "}
-          <span className="relative inline-block">
-            <a
-              href="https://cloud.google.com/discover/gpu-for-ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold hover:text-blue-500"
-              onMouseEnter={() => setShowGpuTooltip(true)}
-              onMouseLeave={() => setShowGpuTooltip(false)}
-              onClick={(e) => {
-                if (window.innerWidth < 768) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowGpuTooltip((prev) => !prev);
-                }
-              }}
+        <div className="flex flex-col items-center justify-center gap-3">
+          <p>
+            Training AI models is <b>extremely intensive</b>.
+          </p>
+          <p>
+            They can require <i>millions of hours</i> of simulations, requiring
+            <span
+              className={`${hugeText ? "text-4xl" : "text-md"} mx-2 italic transition-all duration-2000 applyElectricFont`}
             >
-              GPUs
-            </a>
-
-            <AnimatePresence>
-              {showGpuTooltip && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-56 p-2 text-xs md:text-sm bg-black text-white rounded shadow-lg z-50"
-                >
-                  GPU (Graphics Processing Unit) - a processor specialised for
-                  executing many tasks in parallel.
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </span>{" "}
-          in massive data centers. The scale of hardware directly impacts energy
-          consumption.
-        </>
+              huge
+            </span>{" "}
+            amounts of processing power.
+          </p>
+          <p>
+            <b>This is where the problems start.</b>
+          </p>
+        </div>
       ),
-      image: "/images/server-rack.jpg",
     },
     {
-      title: "Cooling and Efficiency Techniques",
+      title: "Data Centers",
       text: (
-        <>
-          Modern data centers use advanced cooling (liquid cooling, AI-optimised
-          airflow) to reduce water and energy use while keeping servers at
-          optimal temperatures.
-        </>
+        <div className="flex flex-col items-center justify-center gap-3">
+          <p>Massive data centers are used to train LLM models.</p>
+          <img
+            src="/images/server-rack.jpg"
+            alt="Generic depiction of many server racks in a data center."
+            className="h-full max-w-90 rounded-2xl drop-shadow-xl border"
+          />
+          <p>
+            These can house thousands of <b>CPUs</b>, <b>GPUs</b> and terrabytes
+            of <b>RAM</b> - all very key components of computing.
+          </p>
+          <p>Running these, requires a lot of resources.</p>
+        </div>
       ),
-      image: "/images/data-center-cooling.jpg",
+    },
+    {
+      title: "Data Centers II",
+      text: (
+        <div className="flex flex-col items-center justify-center gap-3">
+          <p>
+            Large quantities of water and electrcitiy are required in the
+            training of LLMs - these unfortuntely resulting in the production of{" "}
+            <b>Carbon Dioxide (CO₂)</b>
+          </p>
+          <img
+            src="/images/data-center-co2.png"
+            alt="Cartoon-style image showing a lot of electricity and water is put into servers to get AI as a product, this procudes a fair amount of carbon dioxide"
+            className="h-full max-w-90 "
+          />
+          <p>
+            A majority of the worlds <b>electricity</b> is still generated by
+            the burning of fossil fuels, such as <b>oil</b> and <b>coal</b>.
+          </p>
+          <p>
+            <b>Water</b> has to be pumped in, and sometimes processed, before it
+            reaches data centers where it is used for <b>cooling</b> - this also
+            requires electrcity.
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "Invisible Impact",
+      text: (
+        <div className="flex flex-col items-center justify-center gap-3">
+          <p>This is what makes the impact of using AI, so difficult to see.</p>
+          <p>
+            It's out of sight, hidden behind a mask of{" "}
+            <i>utility and convenience</i>.
+          </p>
+          <img src="images/eye.jpg" className="h-full max-w-40" />
+          <p>This is why education on this topic is important</p>
+          <p className="font-semibold">
+            For now, time for a quiz. Let's see what you've picked up.
+          </p>
+        </div>
+      ),
       isFinal: true,
     },
   ];
@@ -143,7 +205,7 @@ export default function Section1() {
       <div className="absolute top-12 w-full max-w-md">
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-green-600"
+            className="h-full bg-green-700"
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.5 }}
@@ -162,7 +224,7 @@ export default function Section1() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -40 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-4 text-center max-w-lg"
+          className="flex flex-col items-center gap-4 text-center max-w-lg relative bottom-12"
         >
           <h2 className="text-lg md:text-xl font-semibold">
             {steps[stepIndex].title}
@@ -170,7 +232,7 @@ export default function Section1() {
 
           <p className="text-sm md:text-base">{steps[stepIndex].text}</p>
 
-          {steps[stepIndex].image && (
+          {/* {steps[stepIndex].image && (
             <div className="w-fit max-w-80">
               <img
                 src={steps[stepIndex].image}
@@ -178,11 +240,11 @@ export default function Section1() {
                 className="mt-4 w-full rounded"
               />
             </div>
-          )}
+          )} */}
 
           <button
             onClick={handleNext}
-            className="mt-6 bg-slate-900 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-slate-700 hover:cursor-pointer transition"
+            className="mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-green-900 hover:cursor-pointer transition"
           >
             {isFinalStep ? "Continue" : "Next"}
           </button>

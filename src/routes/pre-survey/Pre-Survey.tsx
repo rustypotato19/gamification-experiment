@@ -188,7 +188,7 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 13,
     prompt:
-      "What happens to AI’s environmental footprint when models grow larger?",
+      "What happens to AI's environmental footprint when models grow larger?",
     options: {
       a: "It decreases slightly",
       b: "It stays the same",

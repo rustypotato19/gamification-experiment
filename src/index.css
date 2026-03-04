@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: electricFont;
+  src: url("/fonts/cm-font/CmFont-pgggZ.ttf")
+}
+
+.applyElectricFont {
+  font-family: electricFont;
+}
+
 .fullscreen-no-margin {
   margin: 0;
   padding: 0;

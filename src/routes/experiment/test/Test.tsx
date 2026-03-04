@@ -59,7 +59,7 @@ function TestInner({ participantId }: Props) {
       if (last === 0) ctx.setCurrentIndex(0);
       else if (last === 1) ctx.setCurrentIndex(3);
       else if (last === 2) ctx.setCurrentIndex(6);
-      else if (last === 3) ctx.setCurrentIndex(6);
+      else if (last === 3) ctx.setCurrentIndex(9);
     }
 
     init();
