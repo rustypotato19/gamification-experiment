@@ -3,9 +3,8 @@ import TestContext from "../../TestContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Step = {
-  title: string;
+  title: string | React.ReactNode;
   text: React.ReactNode;
-  image?: string;
   isFinal?: boolean;
 };
 
@@ -21,105 +20,168 @@ export default function Section2() {
 
   const steps: Step[] = [
     {
-      title: "Section 2: How Big Is AI's Environmental Impact?",
+      title: (
+        <div className="flex flex-col gap-4">
+          <span className="text-2xl">Section 2 of 3</span>
+          Focusing on CO₂, Electricity and Water
+        </div>
+      ),
       text: (
-        <>
-          In Section 1, we explored how AI uses energy and water.
-          <br />
-          Now let's look at <strong>how much</strong> it actually consumes - and
-          why scale matters.
-        </>
+        <div className="flex justify-center items-center">
+          <p className="text-lg mt-4">
+            In this section, we'll go through just how much resources LLM
+            training and usage requires, and <i>why scale matters</i>
+          </p>
+        </div>
       ),
     },
     {
-      title: "Energy Per Query",
+      title: "Training vs. Usage",
       text: (
-        <>
-          A single AI query may only use a small amount of energy - often
-          measured in <strong>milligrams (1/1000 grams) of CO₂</strong>
-          <br />
-          <br />
-          But millions of users making billions of requests every day quickly
-          adds up.
-        </>
+        <div className="flex flex-col justify-center items-center">
+          <p>
+            <b>Training</b> an LLM model is very resource intensive up-front.
+          </p>
+          <p>
+            <i>However</i>, when <b>using</b> an LLM the amount of resources
+            used builds up over a longer period of time.
+          </p>
+          <div className="flex flex-row justify-center items-center px-4 gap-4 mt-6">
+            <img src="/images/chatgpt-logo.png" className="h-full w-20" />
+            <p className="w-30 font-bold">Let's talk about GPT-3.</p>
+          </div>
+        </div>
       ),
-      image: "/gifs/multiplying-co2.gif",
     },
     {
-      title: "Scale Multiplies Impact",
+      title: "GPT-3: Electricity",
       text: (
-        <>
-          Even small per-query costs become significant at global scale.
-          Generative AI systems process enormous volumes of text, images, and
-          data continuously.
-          <br />
-          <br />
-          billions of small impacts = one large environmental impact.
-        </>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <div>
+            <p>
+              GPT-3 was reported to have used <b>~1,300 MWh</b> of electricity
+              for one training run.
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to run ~120 US homes for 1
+              year
+            </p>
+          </div>
+          <div className="flex w-full justify-around overflow-hidden">
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+            <img src="/gifs/electric.gif" className="w-10" />
+          </div>
+          <div>
+            <p>
+              Per query, this number drops to ~1 Wh - however, reports state
+              that <i>globally</i>, ChatGPT experiences as much as{" "}
+              <b>2.5 billion</b> queries <b>daily</b>
+            </p>
+            <p className="mt-2 italic">
+              1 year = 365 x 2.5 billion x 1 Wh = ~912.5 billion Wh (or 912,500
+              MWh)
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to run <b>~82,400</b> (~55%)
+              US homes for 1 year
+            </p>
+          </div>
+        </div>
       ),
-      image: "/gifs/growing-queries.gif"
     },
     {
-      title: "Training vs Daily Use",
+      title: "GPT-3: Water",
       text: (
-        <>
-          The <strong>training phase</strong> of large AI models is extremely
-          energy intensive.
-          <br />
-          <br />
-          Training can emit as much CO₂ as <strong>several cars</strong> over their lifetime.
-          <br />
-          <br />
-          Daily user queries (inference) also consume energy, but typically far
-          less than initial training.
-        </>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <div>
+            <p>
+              GPT-3 was reported to have used <b>~700,000L</b> of water
+              for one training run.
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to fill ~2.8M glasses of water / ~0.25 olympic swimming pools
+            </p>
+          </div>
+          <div className="flex w-full justify-around overflow-hidden">
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+            <img src="/gifs/water-drop.gif" className="w-10" />
+          </div>
+          <div>
+            <p>
+              Per query, this number drops to ~0.3 ml - however: 
+            </p>
+            <p className="mt-2 italic">
+              365 days x 2.5 bil. queries x 0.3 ml = ~280 billion ml (or <b>280 million L</b>)
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to fill <b>1.1 billion</b> glasses of water / <b>112</b> olympic swimming pools
+            </p>
+          </div>
+        </div>
       ),
-      image: "/images/AI-training-cars.png"
     },
     {
-      title: "Model Size Matters",
+      title: "GPT-3: CO₂",
       text: (
-        <>
-          Larger models require:
-          <br />
-          • More GPUs • More computation • More electricity •
-          <br />
-          <br />
-          As models grow in size and complexity, their environmental footprint
-          increases significantly.
-        </>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <div>
+            <p>
+              GPT-3 was reported to have emitted <b>~500 tonnes</b> of CO₂ or equivalent (tCO₂e)
+              for one training run.
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to drive ~100 cars for 1 year
+            </p>
+          </div>
+          <div className="flex w-full justify-around overflow-hidden">
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+            <img src="/gifs/co2.gif" className="w-10" />
+          </div>
+          <div>
+            <p>
+              Per query, this number drops to ~0.1 grams - however: 
+            </p>
+            <p className="mt-2 italic">
+              365 days x 2.5 bil. queries x 0.1 gram = ~91.2 billion grams (or <b>91,250 tCO₂e</b>)
+            </p>
+            <p className="text-xs text-neutral-700">
+              This is roughly as much as it takes to drive <b>18,250</b> cars for 1 year
+            </p>
+          </div>
+        </div>
       ),
-      image: "/images/complexity-env-impact-graph.png"
     },
-    {
-      title: "Energy Source Makes a Difference",
-      text: (
-        <>
-          AI systems powered by <strong>renewable energy</strong> produce far
-          fewer carbon emissions than those powered by coal or natural gas.
-          <br />
-          <br />
-          The same computation can have very different environmental
-          consequences depending on the energy mix.
-        </>
-      ),
-      image: "/images/energies.png",
-    },
-    {
-      title: "User Behaviour Also Matters",
-      text: (
-        <>
-          Repeated or unnecessary prompting increases computation and energy
-          use.
-          <br />
-          <br />
-          Being concise and using AI only when appropriate can reduce
-          environmental impact.
-        </>
-      ),
-      image: "/images/intentional-prompts.png",
-      isFinal: true,
-    },
+    /* add step on how new models require even more, numbers are approximte etc. */
   ];
 
   const totalSteps = steps.length;
@@ -160,17 +222,13 @@ export default function Section2() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -40 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-4 text-center max-w-lg"
+          className="flex flex-col items-center gap-4 text-center max-w-lg relative bottom-12"
         >
           <h2 className="text-lg md:text-xl font-semibold">
             {steps[stepIndex].title}
           </h2>
 
           <p className="text-sm md:text-base">{steps[stepIndex].text}</p>
-
-          <div className="flex justify-center items-center overflow-clip max-w-120 max-h-80">
-            <img className="max-w-full h-full" src={steps[stepIndex].image}/>
-          </div>
 
           <button
             onClick={handleNext}

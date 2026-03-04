@@ -159,7 +159,7 @@ export default function Section1() {
           <p>
             <b>Water</b> has to be pumped in, and sometimes processed, before it
             reaches data centers where it is used for <b>cooling</b> - this also
-            requires electrcity.
+            requires electricity.
           </p>
         </div>
       ),

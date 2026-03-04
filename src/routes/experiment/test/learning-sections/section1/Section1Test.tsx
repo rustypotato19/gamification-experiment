@@ -55,7 +55,7 @@ const QUESTIONS: Question[] = [
       c: "Electricity and Metal",
     },
     correct: "a",
-    image: "/images/data-center-co2.png"
+    image: "/images/data-center-co2.png",
   },
   {
     id: 5,
@@ -66,7 +66,7 @@ const QUESTIONS: Question[] = [
       c: "CO₂ emission",
     },
     correct: "c",
-    image: "/images/data-center-co2.png"
+    image: "/images/data-center-co2.png",
   },
   {
     id: 6,
@@ -77,7 +77,7 @@ const QUESTIONS: Question[] = [
       c: "There isn't any data on the environmental effects of LLMs",
     },
     correct: "b",
-    image: "/images/eye.jpg"
+    image: "/images/eye.jpg",
   },
 ];
 
@@ -177,7 +177,7 @@ export default function Section1Test() {
               <img
                 src={question.image}
                 alt="Question visual"
-                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 > 2 && current + 1 != 3 && "max-w-80 h-full rounded"} mx-auto`}
+                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${(current+1 == 1 || current+1 >= 4) && "max-w-80 h-full rounded"} mx-auto`}
               />
             )}
             <div className="flex flex-col gap-3 mt-4">
