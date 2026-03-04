@@ -15,71 +15,69 @@ type Question = {
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    prompt:
-      "Which one of the following statements about data centers' environmental impact is true?",
+    prompt: "What term best describes agents such as ChatGPT or Gemini?",
     options: {
-      a: "Data centers use large amounts of energy and water",
-      b: "Data centers do not use large amounts of energy or water",
-      c: "Data centers only use energy but not water",
+      a: "Artificial Intelligence",
+      b: "Computer Simulation",
+      c: "Large Language Model",
     },
-    correct: "a",
-    image: "/images/data-center-co2.png",
+    correct: "c",
+    image: "/images/different-languages.jpg",
   },
   {
     id: 2,
-    prompt:
-      "What is the effect of data centers' energy use on the environment?",
+    prompt: "How does an LLM generate a response?",
     options: {
-      a: "The effect is negligible",
-      b: "Data centers largely contribute to CO₂ emissions",
-      c: "Data centers provide water for local communities",
+      a: "It uses maths to predict the most statistically probable repsonse",
+      b: "It simply understands us, and has opinions and creative ability of its own",
+      c: "It searches the internet for a response to your question, and provides the first response",
     },
-    correct: "b",
+    correct: "a",
+    image: "/gifs/hackerScreen.gif",
   },
   {
     id: 3,
-    prompt: "Why do data centers use large amounts of water?",
+    prompt: "What is required to train an LLM?",
     options: {
-      a: "Cleaning and maintenance",
-      b: "Cooling servers efficiently",
-      c: "Generating electricity on-site",
+      a: "A few computers in an I.T. room",
+      b: "Huge data centers filled with computational components",
+      c: "There is no requirements, the LLM knows what to do",
     },
     correct: "b",
-    image: "/images/data-center-cooling.jpg",
-  },
-  {
-    id: 4,
-    prompt: "Which approach helps reduce AI's energy use?",
-    options: {
-      a: "Using smaller/optimised AI models",
-      b: "Spending less time optimising models",
-      c: "Running models on older hardware",
-    },
-    correct: "a",
-    image: "/images/energy-efficiency.png",
-  },
-  {
-    id: 5,
-    prompt:
-      "What is a key physical factor in a data center's environmental impact?",
-    options: {
-      a: "The number of servers and their energy efficiency",
-      b: "The location of the data center",
-      c: "Brand of network switches",
-    },
-    correct: "a",
     image: "/images/server-rack.jpg",
   },
   {
-    id: 6,
-    prompt: "Which part of server racks make them so energy-intensive?",
+    id: 4,
+    prompt: "What are the 2 main resources consumed in LLM training?",
     options: {
-      a: "The CPUs",
-      b: "The GPUs",
-      c: "The RAM",
+      a: "Electricity and Water",
+      b: "Gold and Silicon",
+      c: "Electricity and Metal",
+    },
+    correct: "a",
+    image: "/images/data-center-co2.png"
+  },
+  {
+    id: 5,
+    prompt: "What is the primary negative product of LLM training and usage?",
+    options: {
+      a: "Noise pollution",
+      b: "Light pollution",
+      c: "CO₂ emission",
+    },
+    correct: "c",
+    image: "/images/data-center-co2.png"
+  },
+  {
+    id: 6,
+    prompt: "Why are the environmental effects of LLMs not talked about?",
+    options: {
+      a: "There are no environmental effects of using LLMs",
+      b: "The environmental effects are indirect and difficult to identify",
+      c: "There isn't any data on the environmental effects of LLMs",
     },
     correct: "b",
-    image: "/images/gpu.jpg",
+    image: "/images/eye.jpg"
   },
 ];
 
@@ -146,15 +144,16 @@ export default function Section1Test() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-md text-center"
+            className="w-full max-w-100 bg-white p-6 rounded-2xl drop-shadow-2xl text-center border border-green-700/40"
           >
             <h2 className="text-xl font-semibold">Time for a Quiz!</h2>
-            <p className="mt-3">
-              Let's test your knowledge on AI's environmental impact.
+            <p className="mt-3 max-w-full">
+              Let's test your knowledge on what "AI" is, and how it affects the
+              environment.
             </p>
             <button
               onClick={() => setCurrent(0)}
-              className="mt-6 bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-slate-700 hover:cursor-pointer transition"
+              className="mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl hover:bg-green-900 hover:cursor-pointer transition"
             >
               Start Quiz
             </button>
@@ -168,7 +167,7 @@ export default function Section1Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white border-2 border-neutral-200 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="relative top-8 h-full w-full max-w-2xl bg-white border-2 border-neutral-200 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
@@ -178,7 +177,7 @@ export default function Section1Test() {
               <img
                 src={question.image}
                 alt="Question visual"
-                className="mt-4 max-w-sm mx-auto rounded"
+                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 > 2 && current + 1 != 3 && "max-w-80 h-full rounded"} mx-auto`}
               />
             )}
             <div className="flex flex-col gap-3 mt-4">
