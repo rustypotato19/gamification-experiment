@@ -75,7 +75,8 @@ async function submitSurvey(params: {
 const PRE_QUESTIONS: Question[] = [
   {
     id: 1,
-    prompt: "Why is AI's environmental impact often underestimated by users?",
+    prompt:
+      "Why is generative AI's environmental impact often underestimated by users?",
     options: {
       a: "AI runs locally on phones",
       b: "The impact is indirect and invisible",
@@ -90,12 +91,11 @@ const PRE_QUESTIONS: Question[] = [
   },
   {
     id: 3,
-    prompt:
-      "Which activity is most equivalent to a conversation with ChatGPT in energy use?",
+    prompt: "Which option is the most energy intensive?",
     options: {
-      a: "Driving a car for 10 minutes",
-      b: "Taking a warm shower",
-      c: "Brewing cup of coffee",
+      a: "General-purpose generative AI",
+      b: "Specialised generative AI",
+      c: "Internet search",
     },
   },
   {
@@ -122,8 +122,8 @@ const PRE_QUESTIONS: Question[] = [
     prompt:
       "What is the main reason generative AI systems consume large amounts of electricity?",
     options: {
-      a: "---",
-      b: "Data centre operation",
+      a: "Lighting the data center",
+      b: "Computer components in the servers",
       c: "Internet speed",
     },
   },
@@ -150,7 +150,7 @@ const PRE_QUESTIONS: Question[] = [
     prompt:
       "Which factor most increases the carbon footprint of generative AI?",
     options: {
-      a: "The brand of the AI model",
+      a: "The device the AI is used on",
       b: "The time of day the AI is used",
       c: "AI model size and complexity",
     },
@@ -454,12 +454,6 @@ export default function PreSurvey() {
                 {submitted.message}
               </p>
             ) : null}
-
-            <p className="mt-3 text-xs text-slate-500">
-              Submission is sent to your backend API (
-              <span className="font-mono">/api/surveys</span>) and stored in
-              SQL.
-            </p>
           </section>
         </main>
       </div>

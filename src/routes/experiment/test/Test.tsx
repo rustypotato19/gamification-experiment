@@ -29,7 +29,7 @@ type Props = {
 function TestInner({ participantId }: Props) {
   const ctx = useContext(TestContext);
 
-  const allowedStages = [1, 4];
+  const allowedStages = [1, 4, 7];
 
   const questions = [
     <Section1 key="section1" />,
@@ -41,8 +41,8 @@ function TestInner({ participantId }: Props) {
     <Section2Finish key="section2finish" />,
 
     <Section3 key="section3" />,
-    <Section3Test key="section3test"/>,
-    <Section3Finish key="section3finish"/>,
+    <Section3Test key="section3test" />,
+    <Section3Finish key="section3finish" />,
   ];
 
   useEffect(() => {
@@ -160,12 +160,54 @@ function TestInner({ participantId }: Props) {
             </button>
           </div>
 
-          <button className="absolute top-6 right-10" onClick={() => {ctx.setCurrentIndex(0)}}>Section 1</button>
-          <button className="absolute top-12 right-10" onClick={() => {ctx.setCurrentIndex(1)}}>Section 1 quiz</button>
-          <button className="absolute top-18 right-10" onClick={() => {ctx.setCurrentIndex(3)}}>Section 2</button>
-          <button className="absolute top-24 right-10" onClick={() => {ctx.setCurrentIndex(4)}}>Section 2 quiz</button>
-          <button className="absolute top-30 right-10" onClick={() => {ctx.setCurrentIndex(6)}}>Section 3</button>
-          <button className="absolute top-36 right-10" onClick={() => {ctx.setCurrentIndex(7)}}>Section 3 quiz</button>
+          <button
+            className="absolute top-6 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(0);
+            }}
+          >
+            Section 1
+          </button>
+          <button
+            className="absolute top-12 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(1);
+            }}
+          >
+            Section 1 quiz
+          </button>
+          <button
+            className="absolute top-18 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(3);
+            }}
+          >
+            Section 2
+          </button>
+          <button
+            className="absolute top-24 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(4);
+            }}
+          >
+            Section 2 quiz
+          </button>
+          <button
+            className="absolute top-30 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(6);
+            }}
+          >
+            Section 3
+          </button>
+          <button
+            className="absolute top-36 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(7);
+            }}
+          >
+            Section 3 quiz
+          </button>
 
           {showWithrawPopup && (
             <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">

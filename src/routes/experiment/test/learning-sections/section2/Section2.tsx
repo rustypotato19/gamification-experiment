@@ -12,6 +12,8 @@ export default function Section2() {
   const [stepIndex, setStepIndex] = useState(0);
   const ctx = useContext(TestContext);
 
+  const [allowNext, setAllowNext] = useState(true);
+
   useEffect(() => {
     if (ctx) ctx.testMilestonesType.setSection2StartTime(Date.now());
   }, [ctx]);
@@ -218,7 +220,7 @@ export default function Section2() {
           </p>
         </div>
       ),
-      isFinal: true
+      isFinal: true,
     },
   ];
 
@@ -226,11 +228,18 @@ export default function Section2() {
   const isFinalStep = steps[stepIndex].isFinal;
 
   const handleNext = () => {
-    if (isFinalStep) {
-      setTimeout(() => ctx.next(), 800);
-    } else {
-      setStepIndex((prev) => prev + 1);
-    }
+    setAllowNext(false);
+    setTimeout(() => {
+      setAllowNext(true);
+    }, 5000);
+
+    setTimeout(() => {
+      if (isFinalStep) {
+        setTimeout(() => ctx.next(), 800);
+      } else {
+        if (allowNext) setStepIndex((prev) => prev + 1);
+      }
+    }, 100);
   };
 
   const progressPercent = (stepIndex / (totalSteps - 1)) * 100;
@@ -270,7 +279,8 @@ export default function Section2() {
 
           <button
             onClick={handleNext}
-            className="mt-4 bg-orange-500 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-orange-700 hover:cursor-pointer transition"
+            className="mt-4 bg-orange-500 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-orange-700 hover:cursor-pointer transition disabled:bg-neutral-500 disabled:cursor-not-allowed"
+            disabled={!allowNext}
           >
             {isFinalStep ? "Continue" : "Next"}
           </button>

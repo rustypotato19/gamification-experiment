@@ -13,6 +13,8 @@ export default function Section1() {
   const [stepIndex, setStepIndex] = useState(0);
   const [showGpuTooltip, setShowGpuTooltip] = useState(false);
 
+  const [allowNext, setAllowNext] = useState(true);
+
   const [hugeText, setHugeText] = useState(false);
 
   useEffect(() => {
@@ -190,11 +192,18 @@ export default function Section1() {
   const isFinalStep = steps[stepIndex].isFinal;
 
   const handleNext = () => {
-    if (isFinalStep) {
-      setTimeout(() => ctx.next(), 800);
-    } else {
-      setStepIndex((prev) => prev + 1);
-    }
+    setAllowNext(false);
+    setTimeout(() => {
+      setAllowNext(true);
+    }, 5000);
+
+    setTimeout(() => {
+      if (isFinalStep) {
+        setTimeout(() => ctx.next(), 800);
+      } else {
+        if (allowNext) setStepIndex((prev) => prev + 1);
+      }
+    }, 100);
   };
 
   const progressPercent = (stepIndex / (totalSteps - 1)) * 100;
@@ -232,19 +241,12 @@ export default function Section1() {
 
           <p className="text-sm md:text-base">{steps[stepIndex].text}</p>
 
-          {/* {steps[stepIndex].image && (
-            <div className="w-fit max-w-80">
-              <img
-                src={steps[stepIndex].image}
-                alt={steps[stepIndex].title}
-                className="mt-4 w-full rounded"
-              />
-            </div>
-          )} */}
-
           <button
-            onClick={handleNext}
-            className="mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-green-900 hover:cursor-pointer transition"
+            onClick={() => {
+              handleNext();
+            }}
+            className="mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-green-800 hover:cursor-pointer transition disabled:bg-neutral-500 disabled:cursor-not-allowed"
+            disabled={!allowNext}
           >
             {isFinalStep ? "Continue" : "Next"}
           </button>

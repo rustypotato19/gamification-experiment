@@ -18,7 +18,18 @@ type Question = {
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    prompt: "What reduces AI-related environmental impact?",
+    prompt: "Why do individual actions matter?",
+    options: {
+      a: "They don't",
+      b: "They can scale globally",
+      c: "Only companies matter",
+    },
+    correct: "b",
+    image: "/images/globe-hands.png"
+  },
+  {
+    id: 2,
+    prompt: "What reduces LLM-related environmental impact?",
     options: {
       a: "Repeated prompts",
       b: "Intentional and concise usage",
@@ -28,29 +39,40 @@ const QUESTIONS: Question[] = [
     image: "/images/intentional-prompts.png",
   },
   {
-    id: 2,
-    prompt: "When should traditional tools be preferred?",
+    id: 3,
+    prompt: "What can mitigate the carbon emissions of LLMs?",
     options: {
-      a: "For simple tasks",
-      b: "Never",
-      c: "Only for entertainment",
+      a: "Nothing",
+      b: "Burning more fossil fuels",
+      c: "Switching to renewable energy",
+    },
+    correct: "c",
+    image: "/images/renewable-energy.jpg",
+  },
+  {
+    id: 4,
+    prompt: "Which of these options would help reduce energy and water consumption of LLMs?",
+    options: {
+      a: "Simplifying LLMs for specific uses",
+      b: "Creating more general-purpose models",
+      c: "Querying LLMs with many short messages",
     },
     correct: "a",
   },
   {
-    id: 3,
-    prompt: "Why do individual actions matter?",
+    id: 5,
+    prompt: "When should traditional tools be preferred over using LLMs?",
     options: {
-      a: "They don’t",
-      b: "They scale globally",
-      c: "Only companies matter",
+      a: "Always",
+      b: "Never",
+      c: "For simple tasks",
     },
-    correct: "b",
+    correct: "a",
   },
 ];
 
 function getDateNow() {
-    return Date.now()
+  return Date.now();
 }
 
 /* ---------------------------------- */
@@ -117,11 +139,11 @@ export default function Section3Test() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-md text-center"
+            className="w-full max-w-2xl bg-white p-6 rounded-2xl drop-shadow-2xl border border-indigo-700/40 text-center"
           >
             <h2 className="text-xl font-semibold">Section 3 Quiz</h2>
             <p className="mt-3">
-              Test your understanding of reducing AI's environmental impact.
+              Let's test your understanding of reducing AI's environmental impact.
             </p>
             <button
               onClick={() => setCurrent(0)}
@@ -140,7 +162,7 @@ export default function Section3Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white border-2 border-neutral-200 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="w-full min-w-lg max-w-2xl bg-white border-2 border-indigo-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
