@@ -167,7 +167,7 @@ export default function Section1Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="relative top-8 h-full w-full max-w-2xl bg-white border-2 border-neutral-200 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="relative top-8 h-full w-full max-w-2xl bg-white border-2 border-green-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}

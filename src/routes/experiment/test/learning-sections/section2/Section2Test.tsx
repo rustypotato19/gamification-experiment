@@ -15,58 +15,54 @@ type Question = {
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    prompt: "Why can small per-query energy use still matter?",
+    prompt: "Why does small, per-query energy use still matter?",
     options: {
       a: "Because each query uses a lot of electricity",
       b: "Because billions of queries multiply the total impact",
       c: "Because AI runs only once per day",
     },
     correct: "b",
-    image: "/gifs/multiplying-co2.gif",
   },
   {
     id: 2,
-    prompt: "Which phase of AI typically consumes the most energy?",
+    prompt:
+      "In regards to GPT-3, which part of the LLM lifecycle typically consumes the most energy?",
     options: {
-      a: "Training large models",
+      a: "Model Training",
       b: "Daily user prompts",
-      c: "Shutting servers down",
+      c: "Annual LLM usage",
     },
-    correct: "a",
-    image: "/images/AI-training-cars.png",
+    correct: "c",
   },
   {
     id: 3,
-    prompt: "Why does model size matter?",
+    prompt: "How much electricity did the training of GPT-3 require?",
     options: {
-      a: "Larger models need more GPUs and electricity",
-      b: "Larger models use less energy",
-      c: "Model size has no environmental effect",
+      a: "Enough to power ~120 US Homes for 1 year (~1,300 MWh)",
+      b: "Enough to power ~1,000 US Homes for 1 year (~12,000 MWh)",
+      c: "Enough to power ~24 US Homes for 1 year (~260 MWh)",
     },
     correct: "a",
-    image: "/images/complexity-env-impact-graph.png",
   },
   {
     id: 4,
-    prompt: "How does energy source affect AI impact?",
+    prompt: "How much water does a typical conversation with GPT-3 use?",
     options: {
-      a: "Energy source doesn't matter",
-      b: "Renewables reduce carbon emissions",
-      c: "Coal produces fewer emissions",
+      a: "~0.5 glasses",
+      b: "~1 glass",
+      c: "~2 glasses",
     },
     correct: "b",
-    image: "/images/energies.png",
   },
   {
     id: 5,
-    prompt: "How can user behaviour reduce environmental impact?",
+    prompt: "How much CO₂ did the training of GPT-3 produce?",
     options: {
-      a: "By sending repeated unnecessary prompts",
-      b: "By using AI intentionally and concisely",
-      c: "By increasing model size",
+      a: "Enough to run several to several-hundred cars over a year",
+      b: "Enough to run roughly 3 cars over a year",
+      c: "Enough to fuel a flight from Australia to Hawaii",
     },
-    correct: "b",
-    image: "/images/intentional-prompts.png",
+    correct: "a",
   },
 ];
 
@@ -137,11 +133,12 @@ export default function Section2Test() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-md text-center"
+            className="w-full max-w-2xl bg-white p-6 rounded-2xl drop-shadow-2xl border border-orange-500/40 text-center"
           >
             <h2 className="text-xl font-semibold">Section 2 Quiz</h2>
             <p className="mt-3">
-              Let's test your understanding of AI's scale and impact.
+              Let's test your understanding of the resources that LLM's training
+              and usage requires, and <i>why scale matters</i>
             </p>
             <button
               onClick={() => setCurrent(0)}
@@ -159,7 +156,7 @@ export default function Section2Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl bg-white border-2 border-neutral-200 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="w-full max-w-2xl bg-white border-2 border-orange-500/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
@@ -168,11 +165,13 @@ export default function Section2Test() {
             <p>{question.prompt}</p>
 
             {question.image && (
-              <div className="flex justify-center items-center w-full max-w-160 h-60 overflow-clip">
+              <div
+                className={`flex justify-center items-center max-w-full max-h-60 overflow-clip`}
+              >
                 <img
                   src={question.image}
                   alt="Question visual"
-                  className="max-w-full h-full rounded"
+                  className={`rounded ${current + 1 == 1 && "h-140"}`}
                 />
               </div>
             )}

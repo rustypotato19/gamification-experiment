@@ -86,12 +86,12 @@ const PRE_QUESTIONS: Question[] = [
     id: 2,
     prompt:
       "How much CO₂ does a single ChatGPT query approximately generate (on average)?",
-    options: { a: "80 milligrams", b: "3 grams", c: "250 grams" },
+    options: { a: "1.5 grams", b: "0.1 grams", c: "5 grams" },
   },
   {
     id: 3,
     prompt:
-      "Which activity is most equivalent to a 30-minute conversation with ChatGPT in energy use?",
+      "Which activity is most equivalent to a conversation with ChatGPT in energy use?",
     options: {
       a: "Driving a car for 10 minutes",
       b: "Taking a warm shower",
@@ -110,7 +110,7 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 5,
     prompt:
-      "How much water does a 30-minute conversation with ChatGPT require (indirectly, via data centre cooling)?",
+      "How much water does a conversation with ChatGPT require (indirectly, via data centre cooling)?",
     options: {
       a: "0.25 L (~1 glass)",
       b: "1 L (~4 glasses)",
@@ -141,7 +141,7 @@ const PRE_QUESTIONS: Question[] = [
     prompt: "Training a large language model can emit as much CO₂ as:",
     options: {
       a: "Charging a phone for a year",
-      b: "Several cars over an entire lifetime",
+      b: "Several hundred cars over a year",
       c: "Running a laptop for a week",
     },
   },

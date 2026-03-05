@@ -105,11 +105,12 @@ export default function Section2() {
         <div className="flex flex-col justify-center items-center gap-4">
           <div>
             <p>
-              GPT-3 was reported to have used <b>~700,000L</b> of water
-              for one training run.
+              GPT-3 was reported to have used <b>~700,000L</b> of water for one
+              training run.
             </p>
             <p className="text-xs text-neutral-700">
-              This is roughly as much as it takes to fill ~2.8M glasses of water / ~0.25 olympic swimming pools
+              This is roughly as much as it takes to fill ~2.8M glasses of water
+              / ~0.25 olympic swimming pools
             </p>
           </div>
           <div className="flex w-full justify-around overflow-hidden">
@@ -127,14 +128,14 @@ export default function Section2() {
             <img src="/gifs/water-drop.gif" className="w-10" />
           </div>
           <div>
-            <p>
-              Per query, this number drops to ~0.3 ml - however: 
-            </p>
+            <p>Per query, this number drops to ~0.3 ml - however:</p>
             <p className="mt-2 italic">
-              365 days x 2.5 bil. queries x 0.3 ml = ~280 billion ml (or <b>280 million L</b>)
+              365 days x 2.5 bil. queries x 0.3 ml = ~280 billion ml (or{" "}
+              <b>280 million L</b>)
             </p>
             <p className="text-xs text-neutral-700">
-              This is roughly as much as it takes to fill <b>1.1 billion</b> glasses of water / <b>112</b> olympic swimming pools
+              This is roughly as much as it takes to fill <b>1.1 billion</b>{" "}
+              glasses of water / <b>112</b> olympic swimming pools
             </p>
           </div>
         </div>
@@ -146,8 +147,8 @@ export default function Section2() {
         <div className="flex flex-col justify-center items-center gap-4">
           <div>
             <p>
-              GPT-3 was reported to have emitted <b>~500 tonnes</b> of CO₂ or equivalent (tCO₂e)
-              for one training run.
+              GPT-3 was reported to have emitted <b>~500 tonnes</b> of CO₂ or
+              equivalent (tCO₂e) for one training run.
             </p>
             <p className="text-xs text-neutral-700">
               This is roughly as much as it takes to drive ~100 cars for 1 year
@@ -168,20 +169,57 @@ export default function Section2() {
             <img src="/gifs/co2.gif" className="w-10" />
           </div>
           <div>
-            <p>
-              Per query, this number drops to ~0.1 grams - however: 
-            </p>
+            <p>Per query, this number drops to ~0.1 grams - however:</p>
             <p className="mt-2 italic">
-              365 days x 2.5 bil. queries x 0.1 gram = ~91.2 billion grams (or <b>91,250 tCO₂e</b>)
+              365 days x 2.5 bil. queries x 0.1 gram = ~91.2 billion grams (or{" "}
+              <b>91,250 tCO₂e</b>)
             </p>
             <p className="text-xs text-neutral-700">
-              This is roughly as much as it takes to drive <b>18,250</b> cars for 1 year
+              This is roughly as much as it takes to drive <b>18,250</b> cars
+              for 1 year
             </p>
           </div>
         </div>
       ),
     },
-    /* add step on how new models require even more, numbers are approximte etc. */
+    {
+      title: "GPT-3 is Old",
+      text: (
+        <div className="flex flex-col justify-center items-center gap-4">
+          <p>
+            The GPT-3 model is now heavily outdated - but it had the largest
+            number of data available - and as of March 2026, the newest release
+            is GPT-5.2
+          </p>
+          <img src="/images/old-robot.jpeg" className="h-full max-w-40" />
+          <p>
+            Every new, more advanced model requires more and more to create -
+            some reports claim that GPT-4 was roughly <b>8.5x</b> more resource
+            intensive to train than GPT-3.
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "The Numbers",
+      text: (
+        <div className="flex flex-col justify-center items-center gap-4">
+          <p>
+            The presented values are to be <i>taken with a pinch of salt</i>
+          </p>
+          <p>
+            Companies such as OpenAI don't tend to be very open about their
+            water usage and carbon emissions, but certain <b>insights</b> and{" "}
+            <b>calculations</b> over the years have allowed speculations and
+            predictions to form.
+          </p>
+          <p className="font-semibold mt-4">
+            Let's see what you've learnt from section 2.
+          </p>
+        </div>
+      ),
+      isFinal: true
+    },
   ];
 
   const totalSteps = steps.length;
