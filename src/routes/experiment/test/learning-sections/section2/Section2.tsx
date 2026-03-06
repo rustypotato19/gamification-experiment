@@ -56,6 +56,22 @@ export default function Section2() {
       ),
     },
     {
+      title: "Why Scale Matters",
+      text: (
+        <div className="flex flex-col justify-center items-center gap-4">
+          <p>A single AI prompt doesn't seem like much.</p>
+          <p>
+            But globally, ChatGPT receives around{" "}
+            <b>2.5 billion prompts per day</b>.
+          </p>
+          <p>
+            When billions of people use AI every day, the small cost of each
+            prompt quickly becomes extremely large.
+          </p>
+        </div>
+      ),
+    },
+    {
       title: "GPT-3: Electricity",
       text: (
         <div className="flex flex-col justify-center items-center gap-4">
@@ -85,12 +101,10 @@ export default function Section2() {
           </div>
           <div>
             <p>
-              Per query, this number drops to ~1 Wh - however, reports state
-              that <i>globally</i>, ChatGPT experiences as much as{" "}
-              <b>2.5 billion</b> queries <b>daily</b>
+              Per query, this number drops to ~1 Wh - however:
             </p>
             <p className="mt-2 italic">
-              1 year = 365 x 2.5 billion x 1 Wh = ~912.5 billion Wh (or 912,500
+              365 days x 2.5 bil. queries x 1 Wh = ~912.5 billion Wh (or 912,500
               MWh)
             </p>
             <p className="text-xs text-neutral-700">

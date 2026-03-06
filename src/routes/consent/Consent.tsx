@@ -62,6 +62,8 @@ export default function InfoConsentPage() {
 
   const atExperiment =
     window.localStorage.getItem("studyStage") === "experiment";
+  const atPost = window.localStorage.getItem("studyStage") === "post";
+  const atEnd = window.localStorage.getItem("studyStage") === "end";
 
   const [consent, setConsent] = useState<ConsentState>({
     readInfoSheet: false,
@@ -178,9 +180,9 @@ export default function InfoConsentPage() {
       window.localStorage.removeItem("consentGiven");
       window.localStorage.removeItem("consentTimestamp");
       window.location.href = "/consent";
-      alert(
+      /* alert(
         "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-      );
+      ); */
       return;
     }
 
@@ -203,14 +205,18 @@ export default function InfoConsentPage() {
     }
 
     window.location.href = "/withdrawn";
-    alert(
+    /* alert(
       "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-    );
+    ); */
   };
 
   return (
     <div className="min-h-screen bg-neutral-200 text-slate-900 flex items-center justify-center">
-      {gettedParticipantId && gettedConsent && !atExperiment ? (
+      {gettedParticipantId &&
+      gettedConsent &&
+      !atExperiment &&
+      !atPost &&
+      !atEnd ? (
         <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -310,6 +316,107 @@ export default function InfoConsentPage() {
               onClick={() => (window.location.href = "/experiment")}
             >
               Go to Experiment
+            </button>
+          </div>
+        </main>
+      ) : atPost ? (
+        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
+          <div className="mx-auto max-w-3xl px-4 py-10"></div>
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 className="text-lg font-semibold">
+              You have already registered consent and are at the post-survey
+              stage.
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Your participant ID is:{" "}
+              <span className="font-mono font-semibold">
+                {gettedParticipantId}
+              </span>
+              .
+            </p>
+
+            {dbError ? (
+              <p className="mt-4 text-sm font-medium text-amber-700">
+                {dbError}
+              </p>
+            ) : null}
+
+            <p className="mt-4 text-sm text-slate-600">
+              If you have this page open in error or wish to withdraw, please
+              click the button below.
+            </p>
+            <button
+              type="button"
+              className={`mt-4 rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 transition-all duration-200 ${
+                dbBusy
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-slate-50 hover:cursor-pointer active:bg-slate-200"
+              }`}
+              onClick={onWithdraw}
+              disabled={dbBusy}
+            >
+              {dbBusy ? "Processing…" : "Withdraw from Study"}
+            </button>
+
+            <p className="mt-4 text-sm text-slate-600">
+              Otherwise, click the button below to continue to the experiment.
+            </p>
+            <button
+              type="button"
+              className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
+              onClick={() => (window.location.href = "/post")}
+            >
+              Go to Post-Survey
+            </button>
+          </div>
+        </main>
+      ) : atEnd ? (
+        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
+          <div className="mx-auto max-w-3xl px-4 py-10"></div>
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h2 className="text-lg font-semibold">
+              You have already registered consent and are at the end stage.
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Your participant ID is:{" "}
+              <span className="font-mono font-semibold">
+                {gettedParticipantId}
+              </span>
+              .
+            </p>
+
+            {dbError ? (
+              <p className="mt-4 text-sm font-medium text-amber-700">
+                {dbError}
+              </p>
+            ) : null}
+
+            <p className="mt-4 text-sm text-slate-600">
+              If you have this page open in error or wish to withdraw, please
+              click the button below.
+            </p>
+            <button
+              type="button"
+              className={`mt-4 rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 transition-all duration-200 ${
+                dbBusy
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-slate-50 hover:cursor-pointer active:bg-slate-200"
+              }`}
+              onClick={onWithdraw}
+              disabled={dbBusy}
+            >
+              {dbBusy ? "Processing…" : "Withdraw from Study"}
+            </button>
+
+            <p className="mt-4 text-sm text-slate-600">
+              Otherwise, click the button below to continue to the experiment.
+            </p>
+            <button
+              type="button"
+              className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
+              onClick={() => (window.location.href = "/end")}
+            >
+              Go to End page
             </button>
           </div>
         </main>

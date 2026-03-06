@@ -13,6 +13,7 @@ import Section2Finish from "./learning-sections/section2/Section2Finish";
 import Section3 from "./learning-sections/section3/Section3";
 import Section3Test from "./learning-sections/section3/Section3Test";
 import Section3Finish from "./learning-sections/section3/Section3Finish";
+import FinishingScreen from "./learning-sections/FinishingScreen";
 
 function formatNumber(number: number) {
   if (number >= 1000000) {
@@ -43,6 +44,8 @@ function TestInner({ participantId }: Props) {
     <Section3 key="section3" />,
     <Section3Test key="section3test" />,
     <Section3Finish key="section3finish" />,
+
+    <FinishingScreen key="finishingScreen" />,
   ];
 
   useEffect(() => {
@@ -207,6 +210,22 @@ function TestInner({ participantId }: Props) {
             }}
           >
             Section 3 quiz
+          </button>
+          <button
+            className="absolute top-42 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(8);
+            }}
+          >
+            Section 3 finish
+          </button>
+          <button
+            className="absolute top-48 right-10"
+            onClick={() => {
+              ctx.setCurrentIndex(9);
+            }}
+          >
+            End
           </button>
 
           {showWithrawPopup && (

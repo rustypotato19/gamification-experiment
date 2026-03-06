@@ -12,13 +12,13 @@ const ANSWER_KEY: Choice[] = [
   "b",
   "b",
   "b",
+  "c",
+  "c",
+  "c",
+  "b",
+  "b",
   "a",
-  "b",
-  "c",
-  "b",
-  "c",
-  "c",
-  "b",
+  "a",
   "c",
   "c",
   "b",
@@ -73,6 +73,9 @@ async function submitSurvey(params: {
 }
 
 const PRE_QUESTIONS: Question[] = [
+  // =========================
+  // SECTION 1 — AI + DATA CENTRES + INVISIBLE IMPACT
+  // =========================
   {
     id: 1,
     prompt:
@@ -86,17 +89,18 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 2,
     prompt:
-      "How much CO₂ does a single ChatGPT query approximately generate (on average)?",
-    options: { a: "1.5 grams", b: "0.1 grams", c: "5 grams" },
+      "What is the main reason generative AI systems consume large amounts of electricity?",
+    options: {
+      a: "Lighting the data center",
+      b: "Computer components in the servers",
+      c: "Maintaining internet speed",
+    },
   },
   {
     id: 3,
-    prompt: "Which option is the most energy intensive?",
-    options: {
-      a: "General-purpose generative AI",
-      b: "Specialised generative AI",
-      c: "Internet search",
-    },
+    prompt:
+      "Which resource is most heavily consumed by data centres running generative AI models?",
+    options: { a: "Water", b: "Electricity", c: "Rare earth metals" },
   },
   {
     id: 4,
@@ -107,33 +111,37 @@ const PRE_QUESTIONS: Question[] = [
       c: "It's not a concern, AI uses no water",
     },
   },
+
+  // =========================
+  // SECTION 2 — SCALE + ENVIRONMENTAL IMPACT
+  // =========================
   {
     id: 5,
-    prompt:
-      "How much water does a conversation with ChatGPT require (indirectly, via data centre cooling)?",
-    options: {
-      a: "0.25 L (~1 glass)",
-      b: "1 L (~4 glasses)",
-      c: "9.4 L (~38 glasses)",
-    },
-  },
-  {
-    id: 6,
-    prompt:
-      "What is the main reason generative AI systems consume large amounts of electricity?",
-    options: {
-      a: "Lighting the data center",
-      b: "Computer components in the servers",
-      c: "Internet speed",
-    },
-  },
-  {
-    id: 7,
     prompt: "Which phase of generative AI has the highest environmental cost?",
     options: {
       a: "Daily user queries",
       b: "Software updates",
       c: "Model training",
+    },
+  },
+  {
+    id: 6,
+    prompt:
+      "Which factor most increases the carbon footprint of generative AI?",
+    options: {
+      a: "The device the AI is used on",
+      b: "The time of day the AI is used",
+      c: "AI model size and complexity",
+    },
+  },
+  {
+    id: 7,
+    prompt:
+      "What happens to AI's environmental footprint when models grow larger?",
+    options: {
+      a: "It decreases slightly",
+      b: "It stays the same",
+      c: "It increases significantly",
     },
   },
   {
@@ -148,31 +156,30 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 9,
     prompt:
-      "Which factor most increases the carbon footprint of generative AI?",
-    options: {
-      a: "The device the AI is used on",
-      b: "The time of day the AI is used",
-      c: "AI model size and complexity",
-    },
+      "How much CO₂ does a single ChatGPT query approximately generate (on average)?",
+    options: { a: "1.5 grams", b: "0.1 grams", c: "5 grams" },
   },
   {
     id: 10,
     prompt:
-      "Which user behaviour can help reduce the environmental impact of generative AI?",
+      "How much water does a conversation with ChatGPT require (indirectly, via data centre cooling)?",
     options: {
-      a: "Asking longer questions",
-      b: "Being polite to the AI",
-      c: "Being concise with prompts",
+      a: "0.25 L (~1 glass)",
+      b: "1 L (~4 glasses)",
+      c: "9.4 L (~38 glasses)",
     },
   },
+
+  // =========================
+  // SECTION 3 — USER BEHAVIOUR + MITIGATION
+  // =========================
   {
     id: 11,
-    prompt:
-      "What is the problem with using generative AI instead of tradtional tools (e.g., search engines, calculators) for simple tasks?",
+    prompt: "Which option is the most energy intensive?",
     options: {
-      a: "None, AI causes no problems",
-      b: "AI has higher hidden environmental costs",
-      c: "AI provides faster results",
+      a: "General-purpose generative AI",
+      b: "Specialised generative AI",
+      c: "Internet search",
     },
   },
   {
@@ -188,11 +195,11 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 13,
     prompt:
-      "What happens to AI's environmental footprint when models grow larger?",
+      "Which user behaviour can help reduce the environmental impact of generative AI?",
     options: {
-      a: "It decreases slightly",
-      b: "It stays the same",
-      c: "It increases significantly",
+      a: "Asking longer questions",
+      b: "Being polite to the AI",
+      c: "Being concise with prompts",
     },
   },
   {
@@ -208,8 +215,12 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 15,
     prompt:
-      "Which resource is most heavily consumed by data centres running generative AI models?",
-    options: { a: "Water", b: "Electricity", c: "Rare earth metals" },
+      "What is the problem with using generative AI instead of tradtional tools (e.g., search engines, calculators) for simple tasks?",
+    options: {
+      a: "None, AI causes no problems",
+      b: "AI has higher hidden environmental costs",
+      c: "AI provides faster results",
+    },
   },
 ];
 
