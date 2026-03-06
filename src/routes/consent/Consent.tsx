@@ -58,13 +58,9 @@ export default function InfoConsentPage() {
 
   useEffect(() => {
     if (localStorage.getItem("withdrawn")) window.location.href = "/withdrawn";
-  });
+  }, []);
 
-  const atExperiment =
-    window.localStorage.getItem("studyStage") === "experiment";
-  const atPost = window.localStorage.getItem("studyStage") === "post";
-  const atEnd = window.localStorage.getItem("studyStage") === "end";
-
+  const stage = window.localStorage.getItem("studyStage");
   const [consent, setConsent] = useState<ConsentState>({
     readInfoSheet: false,
     voluntaryWithdraw: false,
@@ -72,6 +68,9 @@ export default function InfoConsentPage() {
     understoodAndAgree: false,
   });
   const [touched, setTouched] = useState(false);
+  const [dbBusy, setDbBusy] = useState(false);
+  const [dbError, setDbError] = useState<string | null>(null);
+  const [copyClicked, setCopyClicked] = useState(false);
 
   const [participantId, setParticipantId] = useState<string>(() => {
     if (typeof window === "undefined") return "";
@@ -83,44 +82,37 @@ export default function InfoConsentPage() {
     return id;
   });
 
-  // DB action state
-  const [dbBusy, setDbBusy] = useState(false);
-  const [dbError, setDbError] = useState<string | null>(null);
-
-  // Keep localStorage in sync when the ID is regenerated.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!participantId) return;
     window.localStorage.setItem("participantId", participantId);
   }, [participantId]);
 
-  const allRequiredChecked = useMemo(() => {
-    return (
+  const allRequiredChecked = useMemo(
+    () =>
       consent.readInfoSheet &&
       consent.voluntaryWithdraw &&
       consent.age18Plus &&
-      consent.understoodAndAgree
-    );
-  }, [consent]);
+      consent.understoodAndAgree,
+    [consent],
+  );
 
   const setConsentField = (field: keyof ConsentState) => (checked: boolean) => {
     setConsent((c) => ({ ...c, [field]: checked }));
   };
 
-  const [copyClicked, setCopyClicked] = useState(false);
+  const getStoredParticipantId = () =>
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("participantId")
+      : null;
 
-  const getParticipantIdFromStorage = () => {
-    if (typeof window === "undefined") return null;
-    return window.localStorage.getItem("participantId");
-  };
+  const getStoredConsent = () =>
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("consentGiven") === "true"
+      : null;
 
-  const getParticipantConsentFromStorage = () => {
-    if (typeof window === "undefined") return null;
-    return window.localStorage.getItem("consentGiven") === "true";
-  };
-
-  const gettedParticipantId = getParticipantIdFromStorage();
-  const gettedConsent = getParticipantConsentFromStorage();
+  const storedId = getStoredParticipantId();
+  const storedConsent = getStoredConsent();
 
   const errorText =
     touched && !allRequiredChecked
@@ -138,85 +130,66 @@ export default function InfoConsentPage() {
 
     setDbBusy(true);
 
-    // 1) Attempt DB write first (preferred)
     const consentTimestamp = new Date().toISOString();
     const res = await postJson<{ ok: boolean }>(`/api/consent`, {
       participantId,
-      readInfoSheet: consent.readInfoSheet,
-      voluntaryWithdraw: consent.voluntaryWithdraw,
-      age18Plus: consent.age18Plus,
-      understoodAndAgree: consent.understoodAndAgree,
+      ...consent,
       consentTimestamp,
     });
 
-    // 2) Always set localStorage so your UX flow remains smooth
     window.localStorage.setItem("consentGiven", "true");
     window.localStorage.setItem("consentTimestamp", consentTimestamp);
-
     setDbBusy(false);
 
     if (!res.ok) {
-      // Keep the participant in the study flow even if DB fails,
-      // but show a warning (you can choose to block instead if you prefer).
       alert(
-        `Consent saved locally, but the server could not be reached. (${res.error})`,
+        `Consent saved locally, but server could not be reached. (${res.error})`,
       );
-      // Still proceed:
-      // window.location.href = "/pre";
       return;
     }
-
-    // alert("Successfully saved consent. Thank you for participating!");
 
     window.location.href = "/pre";
   };
 
   const onWithdraw = async () => {
     setDbError(null);
+    const pid = storedId || participantId;
 
-    const pid = gettedParticipantId || participantId;
     if (!pid) {
-      // Still clear local state
       window.localStorage.removeItem("consentGiven");
       window.localStorage.removeItem("consentTimestamp");
       window.location.href = "/consent";
-      /* alert(
-        "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-      ); */
       return;
     }
 
     setDbBusy(true);
 
-    // Try to mark withdrawn in DB
     const res = await postJson<{ ok: boolean }>(`/api/withdraw`, {
       participantId: pid,
     });
-
-    // Clear entire local state regardless
     window.localStorage.clear();
-
     setDbBusy(false);
 
     if (!res.ok) {
       setDbError(
-        `Withdrawn locally, but the server could not be reached. (${res.error})`,
+        `Withdrawn locally, but server could not be reached. (${res.error})`,
       );
     }
 
     window.location.href = "/withdrawn";
-    /* alert(
-      "You have withdrawn from the study. You may close this page. If you have already submitted any anonymous survey responses, they may still be retained in aggregated form.",
-    ); */
   };
+
+  const stageRedirects: Record<string, { label: string; href: string }> = {
+    experiment: { label: "Go to Experiment", href: "/experiment" },
+    post: { label: "Go to Post-Survey", href: "/post" },
+    end: { label: "Go to End page", href: "/end" },
+  };
+
+  const currentStage = stageRedirects[stage || ""] || null;
 
   return (
     <div className="min-h-screen bg-neutral-200 text-slate-900 flex items-center justify-center">
-      {gettedParticipantId &&
-      gettedConsent &&
-      !atExperiment &&
-      !atPost &&
-      !atEnd ? (
+      {storedId && storedConsent && !currentStage ? (
         <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -226,21 +199,16 @@ export default function InfoConsentPage() {
             </h2>
             <p className="mt-2 text-sm text-slate-600">
               Your participant ID is:{" "}
-              <span className="font-mono font-semibold">
-                {gettedParticipantId}
-              </span>
-              .
+              <span className="font-mono font-semibold">{storedId}</span>.
             </p>
-
-            {dbError ? (
+            {dbError && (
               <p className="mt-4 text-sm font-medium text-amber-700">
                 {dbError}
               </p>
-            ) : null}
-
+            )}
             <p className="mt-4 text-sm text-slate-600">
               If you have this page open in error or wish to withdraw, please
-              click the button below.
+              click below.
             </p>
             <button
               type="button"
@@ -254,45 +222,27 @@ export default function InfoConsentPage() {
             >
               {dbBusy ? "Processing…" : "Withdraw from Study"}
             </button>
-
-            <p className="mt-4 text-sm text-slate-600">
-              If you have not already completed the pre-experiment survey,
-              please return to it to continue participation.
-            </p>
-            <button
-              type="button"
-              className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
-              onClick={() => (window.location.href = "/pre")}
-            >
-              Go to Pre-Experiment Survey
-            </button>
           </div>
         </main>
-      ) : atExperiment ? (
+      ) : currentStage ? (
         <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">
-              You have already registered consent and are at the experiment
-              stage.
+              You have already registered consent and are at the {stage} stage.
             </h2>
             <p className="mt-2 text-sm text-slate-600">
               Your participant ID is:{" "}
-              <span className="font-mono font-semibold">
-                {gettedParticipantId}
-              </span>
-              .
+              <span className="font-mono font-semibold">{storedId}</span>.
             </p>
-
-            {dbError ? (
+            {dbError && (
               <p className="mt-4 text-sm font-medium text-amber-700">
                 {dbError}
               </p>
-            ) : null}
-
+            )}
             <p className="mt-4 text-sm text-slate-600">
               If you have this page open in error or wish to withdraw, please
-              click the button below.
+              click below.
             </p>
             <button
               type="button"
@@ -306,117 +256,15 @@ export default function InfoConsentPage() {
             >
               {dbBusy ? "Processing…" : "Withdraw from Study"}
             </button>
-
             <p className="mt-4 text-sm text-slate-600">
               Otherwise, click the button below to continue to the experiment.
             </p>
             <button
               type="button"
               className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
-              onClick={() => (window.location.href = "/experiment")}
+              onClick={() => (window.location.href = currentStage.href)}
             >
-              Go to Experiment
-            </button>
-          </div>
-        </main>
-      ) : atPost ? (
-        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
-          <div className="mx-auto max-w-3xl px-4 py-10"></div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 className="text-lg font-semibold">
-              You have already registered consent and are at the post-survey
-              stage.
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Your participant ID is:{" "}
-              <span className="font-mono font-semibold">
-                {gettedParticipantId}
-              </span>
-              .
-            </p>
-
-            {dbError ? (
-              <p className="mt-4 text-sm font-medium text-amber-700">
-                {dbError}
-              </p>
-            ) : null}
-
-            <p className="mt-4 text-sm text-slate-600">
-              If you have this page open in error or wish to withdraw, please
-              click the button below.
-            </p>
-            <button
-              type="button"
-              className={`mt-4 rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 transition-all duration-200 ${
-                dbBusy
-                  ? "opacity-60 cursor-not-allowed"
-                  : "hover:bg-slate-50 hover:cursor-pointer active:bg-slate-200"
-              }`}
-              onClick={onWithdraw}
-              disabled={dbBusy}
-            >
-              {dbBusy ? "Processing…" : "Withdraw from Study"}
-            </button>
-
-            <p className="mt-4 text-sm text-slate-600">
-              Otherwise, click the button below to continue to the experiment.
-            </p>
-            <button
-              type="button"
-              className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
-              onClick={() => (window.location.href = "/post")}
-            >
-              Go to Post-Survey
-            </button>
-          </div>
-        </main>
-      ) : atEnd ? (
-        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
-          <div className="mx-auto max-w-3xl px-4 py-10"></div>
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <h2 className="text-lg font-semibold">
-              You have already registered consent and are at the end stage.
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Your participant ID is:{" "}
-              <span className="font-mono font-semibold">
-                {gettedParticipantId}
-              </span>
-              .
-            </p>
-
-            {dbError ? (
-              <p className="mt-4 text-sm font-medium text-amber-700">
-                {dbError}
-              </p>
-            ) : null}
-
-            <p className="mt-4 text-sm text-slate-600">
-              If you have this page open in error or wish to withdraw, please
-              click the button below.
-            </p>
-            <button
-              type="button"
-              className={`mt-4 rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 transition-all duration-200 ${
-                dbBusy
-                  ? "opacity-60 cursor-not-allowed"
-                  : "hover:bg-slate-50 hover:cursor-pointer active:bg-slate-200"
-              }`}
-              onClick={onWithdraw}
-              disabled={dbBusy}
-            >
-              {dbBusy ? "Processing…" : "Withdraw from Study"}
-            </button>
-
-            <p className="mt-4 text-sm text-slate-600">
-              Otherwise, click the button below to continue to the experiment.
-            </p>
-            <button
-              type="button"
-              className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white ring-1 ring-slate-900 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
-              onClick={() => (window.location.href = "/end")}
-            >
-              Go to End page
+              {currentStage.label}
             </button>
           </div>
         </main>
@@ -456,9 +304,9 @@ export default function InfoConsentPage() {
                   <button
                     type="button"
                     className={`rounded-xl ${
-                      copyClicked ? "bg-green-500" : "bg-slate-100"
-                    } px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 ${
-                      copyClicked ? "" : "hover:bg-slate-200"
+                      copyClicked ? "bg-green-500" : "bg-white"
+                    } px-4 py-3 text-sm font-medium text-neutral-800 ring-1 ring-neutral-200 ${
+                      copyClicked ? "" : "hover:bg-neutral-200"
                     } hover:cursor-pointer transition-all duration-200`}
                     onClick={() => {
                       if (!participantId) return;
@@ -471,7 +319,7 @@ export default function InfoConsentPage() {
                   </button>
                   <button
                     type="button"
-                    className="rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 hover:bg-slate-50 hover:cursor-pointer active:bg-slate-200 transition-all duration-200"
+                    className="rounded-xl bg-white px-4 py-3 text-sm font-medium text-slate-800 ring-1 ring-slate-200 hover:bg-neutral-200 hover:cursor-pointer active:bg-neutral-600 transition-all duration-200"
                     onClick={() => {
                       const id = generateParticipantId();
                       setParticipantId(id);
