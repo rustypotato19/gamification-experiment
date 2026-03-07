@@ -359,8 +359,7 @@ export default function InfoConsentPage() {
                   This study focuses on spreading awareness about the negative
                   environmental effects of generative artificial intelligence
                   (GenAI). GenAI includes tools such as ChatGPT, Gemini, or
-                  Copilot. These tools are resource intensive and can increase
-                  energy usage, which can impact the environment.
+                  Copilot.
                 </p>
 
                 <hr className="my-2 border-slate-200" />
@@ -429,7 +428,7 @@ export default function InfoConsentPage() {
                   </h3>
                   <ul className="mt-2 list-disc space-y-1 pl-5">
                     <li>Pre-experiment survey (~5 minutes)</li>
-                    <li>Experiment (~20 minutes)</li>
+                    <li>Experiment (~10 minutes)</li>
                     <li>Post-experiment survey (~5 minutes)</li>
                   </ul>
                   <p className="mt-3 text-slate-700">

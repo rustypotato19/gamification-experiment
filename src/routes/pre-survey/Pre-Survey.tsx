@@ -254,7 +254,9 @@ export default function PreSurvey() {
       // If this click completes the survey, show the popup (unless dismissed)
       const nowAllAnswered = next.every((a) => a !== null);
       if (nowAllAnswered && !scorePopupDismissed) {
-        setShowScorePopup(true);
+        setTimeout(() => {
+          setShowScorePopup(true);
+        }, 400);
       }
 
       return next;
@@ -348,10 +350,9 @@ export default function PreSurvey() {
                   const isSelected = selected === choice;
                   const isCorrectChoice = choice === correct;
 
-                  // Visual states:
-                  const showCorrectHighlight = hasAnswered && isCorrectChoice; // highlight correct once answered
-                  const showIncorrectHighlight =
-                    hasAnswered && isSelected && !isCorrectChoice; // wrong selection red
+                  // Only highlight the selected option
+                  const showCorrectHighlight = isSelected && isCorrectChoice;
+                  const showIncorrectHighlight = isSelected && !isCorrectChoice;
 
                   const base =
                     "flex items-start gap-3 rounded-xl p-3 ring-1 transition-all duration-200";
@@ -376,16 +377,13 @@ export default function PreSurvey() {
                   let feedbackText: string | null = null;
                   let feedbackClass = "text-xs font-semibold";
 
-                  if (hasAnswered) {
-                    if (isSelected && isCorrectChoice) {
+                  if (isSelected) {
+                    if (isCorrectChoice) {
                       feedbackText = "Correct!";
                       feedbackClass += " text-green-700";
-                    } else if (isSelected && !isCorrectChoice) {
+                    } else {
                       feedbackText = "Incorrect.";
                       feedbackClass += " text-red-800";
-                    } else if (!isSelected && isCorrectChoice) {
-                      feedbackText = "Correct answer";
-                      feedbackClass += " text-green-700";
                     }
                   }
 
