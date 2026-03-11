@@ -245,7 +245,7 @@ export default function Section1() {
             onClick={() => {
               handleNext();
             }}
-            className="mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-green-800 hover:cursor-pointer transition disabled:bg-neutral-500 disabled:cursor-not-allowed"
+            className="mt-2 sm:mt-6 bg-green-700 text-white px-6 py-3 rounded-2xl text-sm font-medium hover:bg-green-800 hover:cursor-pointer transition disabled:bg-neutral-500 disabled:cursor-not-allowed"
             disabled={!allowNext}
           >
             {isFinalStep ? "Continue" : "Next"}

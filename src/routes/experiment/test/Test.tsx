@@ -358,7 +358,7 @@ function TestInner({ participantId }: Props) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="flex gap-3 absolute bottom-10 left-0 w-full px-10 items-center justify-between"
+                className="flex gap-3 absolute bottom-8 left-0 w-full px-10 items-center justify-between"
               >
                 {/* Score Card */}
                 <div className="bg-linear-to-br from-orange-500 to-red-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-1/2 h-fit transition-all duration-200">

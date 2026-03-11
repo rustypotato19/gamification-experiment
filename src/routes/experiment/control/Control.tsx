@@ -99,12 +99,12 @@ export default function Control({ participantId }: Props) {
         <section className="flex flex-col gap-6">
           <h2 className="text-xl font-semibold">1. What is AI?</h2>
 
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-start gap-4">
             <p>
               The term <b>Artificial Intelligence (AI)</b> is often used to
               describe modern systems like ChatGPT or Gemini. These systems are
               more accurately known as <b>Large Language Models (LLMs)</b>.
-            </p>  
+            </p>
 
             <p>
               LLMs analyse extremely large collections of text and learn
