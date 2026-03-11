@@ -271,7 +271,7 @@ function TestInner({ participantId }: Props) {
           </div>
         ) : (
           <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center justify-between">
+            <div className="flex w-full items-center justify-between">
               <p className="text-xs text-slate-500 mt-4">
                 Participant: {participantId}
               </p>
@@ -279,7 +279,7 @@ function TestInner({ participantId }: Props) {
                 onClick={() => {
                   setShowWithdrawPopup(true);
                 }}
-                className="w-fit h-fit px-4 py-2 bg-red-700 text-white font-bold rounded-2xl text-sm relative top-4 hover:bg-red-500 hover:cursor-pointer"
+                className="w-fit h-fit px-2 py-1 bg-red-700 text-white font-semibold rounded-lg text-sm relative top-2 hover:bg-red-500 hover:cursor-pointer"
               >
                 Withdraw
               </button>

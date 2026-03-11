@@ -89,7 +89,7 @@ export default function Control({ participantId }: Props) {
         </button>
       </header>
 
-      <main className="max-w-3xl flex flex-col gap-12 bg-white rounded-2xl drop-shadow-xl border border-black/20 p-8">
+      <main className="max-w-full flex flex-col gap-12 bg-white rounded-2xl drop-shadow-xl border border-black/20 p-8">
         <h1 className="text-sm italic">
           Please read through the following information, and continue onto the
           next section when ready.
@@ -128,7 +128,7 @@ export default function Control({ participantId }: Props) {
 
             <img
               src="/images/server-rack.jpg"
-              className="max-w-sm rounded-sm"
+              className="sm:max-w-sm rounded-sm"
             />
 
             <p>
@@ -144,7 +144,7 @@ export default function Control({ participantId }: Props) {
               large amounts of heat during computation.
             </p>
 
-            <img src="/images/data-center-co2.png" className="max-w-sm" />
+            <img src="/images/data-center-co2.png" className="sm:max-w-sm" />
 
             <p>
               Since much of the world's electricity is still produced using
@@ -239,7 +239,7 @@ export default function Control({ participantId }: Props) {
           <div className="flex flex-col gap-3">
             <h3 className="font-semibold">Renewable Energy</h3>
 
-            <img src="/images/renewable-energy.jpg" className="max-w-sm" />
+            <img src="/images/renewable-energy.jpg" className="sm:max-w-sm" />
 
             <p>
               Powering data centres using renewable sources such as wind, solar,

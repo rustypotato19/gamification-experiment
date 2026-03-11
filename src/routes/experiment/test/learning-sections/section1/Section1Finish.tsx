@@ -137,8 +137,10 @@ export default function Section1Finish() {
       className="w-full max-w-2xl flex flex-col items-center text-center"
     >
       {/* 🎉 Header */}
-      <h2 className="text-3xl font-bold mb-2">🎉 Section Complete!</h2>
-      <p className="text-slate-500 mb-8">
+      <h2 className="text-xl sm:text-3xl font-bold mb-2">
+        🎉 Section Complete!
+      </h2>
+      <p className="text-slate-500 mb-8 text-sm sm:text-md">
         You've completed Section 1 of AI Impact.
       </p>
 
@@ -151,7 +153,7 @@ export default function Section1Finish() {
         transition={{ duration: 0.4 }}
         className="mb-10"
       >
-        <div className="text-5xl font-extrabold text-emerald-600">
+        <div className="text-2xl sm:text-5xl font-extrabold text-emerald-600">
           +{formatNumber(ptsGained)} Points
         </div>
         <p className="text-sm text-slate-500 mt-1">
@@ -187,9 +189,11 @@ export default function Section1Finish() {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2 sm:p-5 shadow-sm hover:shadow-md transition">
       <p className="text-xs text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-slate-800">{value}</p>
+      <p className="mt-2 text-lg sm:text-2xl font-bold text-slate-800">
+        {value}
+      </p>
     </div>
   );
 }

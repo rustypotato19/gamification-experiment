@@ -164,16 +164,16 @@ export default function Section3Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full sm:min-w-lg max-w-full bg-white border-2 border-indigo-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="w-full sm:min-w-lg max-w-full bg-white border-2 border-indigo-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-2 sm:gap-4"
           >
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-md sm:text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
             </h2>
 
-            <p>{question.prompt}</p>
+            <p className="text-sm sm:text-md">{question.prompt}</p>
 
             {question.image && (
-              <div className="flex justify-center items-center w-full max-w-160 h-60 overflow-clip">
+              <div className="flex justify-center items-center w-full max-w-120 sm:max-w-160 h-40 sm:h-60 overflow-clip">
                 <img
                   src={question.image}
                   alt="Question visual"
@@ -182,9 +182,9 @@ export default function Section3Test() {
               </div>
             )}
 
-            <div className="flex flex-col gap-3 mt-4">
+            <div className="flex flex-col gap-3 mt-2 sm:mt-4">
               {CHOICES.map((c) => {
-                let style = "p-3 rounded-xl ring-1 cursor-pointer transition";
+                let style = "text-sm sm:text-md p-3 rounded-xl ring-1 cursor-pointer transition";
 
                 if (showFeedback) {
                   if (c === question.correct)

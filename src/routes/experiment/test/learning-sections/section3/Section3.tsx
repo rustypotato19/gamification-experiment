@@ -65,9 +65,9 @@ export default function Section3() {
     {
       title: "Simplifying Models",
       text: (
-        <div className="flex flex-col justify-center items-center gap-4">
+        <div className="flex flex-col justify-center items-center gap-2 sm:gap-4">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
-            <div className="flex flex-col justify-center items-center gap-4">
+            <div className="flex flex-col justify-center items-center gap-2 sm:gap-4">
               <p>
                 LLMs such as Chat GPT have become huge, general-purpose tools.
               </p>
@@ -78,7 +78,7 @@ export default function Section3() {
             </div>
             <img
               src="/images/overworked.jpg"
-              className="w-60 rounded-xl border border-black/30 drop-shadow-xl"
+              className="w-40 sm:w-60 rounded-xl border border-black/30 drop-shadow-xl"
             />
           </div>
           <p>
@@ -118,7 +118,10 @@ export default function Section3() {
       title: "Your Usage",
       text: (
         <div className="flex flex-col justify-center items-center w-screen px-6">
-          <img src="/images/intentional-prompts.png" className="w-240 max-w-full" />
+          <img
+            src="/images/intentional-prompts.png"
+            className="w-240 max-w-full"
+          />
         </div>
       ),
     },
@@ -147,10 +150,12 @@ export default function Section3() {
               own website from scratch.
             </b>
           </p>
-          <img
-            src="images/ai-overview.png"
-            className="h-24 rounded-xl border border-indigo-500/40 drop-shadow-lg my-2"
-          />
+          {window.innerWidth > 480 && (
+            <img
+              src="images/ai-overview.png"
+              className="h-24 rounded-xl border border-indigo-500/40 drop-shadow-lg my-2"
+            />
+          )}
           <p>
             Some modern browsers <i>do include "ai assistants"</i>, turning
             these off would be essential at this point, otherwise you're using{" "}
@@ -216,7 +221,7 @@ export default function Section3() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -40 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-4 text-center max-w-lg relative bottom-14"
+          className="flex flex-col items-center gap-4 text-center max-w-lg relative bottom-6 sm:bottom-14"
         >
           <h2 className="text-lg md:text-xl font-semibold">
             {steps[stepIndex].title}

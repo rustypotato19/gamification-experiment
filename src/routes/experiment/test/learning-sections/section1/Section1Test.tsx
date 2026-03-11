@@ -28,9 +28,9 @@ const QUESTIONS: Question[] = [
     id: 2,
     prompt: "How does an LLM generate a response?",
     options: {
-      a: "It uses maths to predict the most statistically probable repsonse",
-      b: "It simply understands us, and has opinions and creative ability of its own",
-      c: "It searches the internet for a response to your question, and provides the first response",
+      a: window.innerWidth > 480 ? "It uses maths to predict the most statistically probable repsonse" : "It uses maths to calculate word sequences",
+      b: window.innerWidth > 480 ? "It simply understands us, and has opinions and creative ability of its own" : "It simply understands us",
+      c: window.innerWidth > 480 ? "It searches the internet for a response to your question, and provides the first response" : "It searches the internet itself",
     },
     correct: "a",
     image: "/gifs/hackerScreen.gif",
@@ -40,8 +40,8 @@ const QUESTIONS: Question[] = [
     prompt: "What is required to train an LLM?",
     options: {
       a: "A few computers in an I.T. room",
-      b: "Huge data centers filled with computational components",
-      c: "There is no requirements, the LLM knows what to do",
+      b: window.innerWidth > 480 ? "Huge data centers filled with computational components" : "Huge data centers",
+      c: "There are no requirements, the LLM knows what to do",
     },
     correct: "b",
     image: "/images/server-rack.jpg",
@@ -72,9 +72,9 @@ const QUESTIONS: Question[] = [
     id: 6,
     prompt: "Why are the environmental effects of LLMs not talked about?",
     options: {
-      a: "There are no environmental effects of using LLMs",
-      b: "The environmental effects are indirect and difficult to identify",
-      c: "There isn't any data on the environmental effects of LLMs",
+      a: window.innerWidth > 480 ? "There are no environmental effects of using LLMs" : "There are no effects",
+      b: window.innerWidth > 480 ? "The environmental effects are indirect and difficult to identify" : "They are indirect; hard to see",
+      c: window.innerWidth > 480 ? "There isn't any data on the environmental effects of LLMs" : "There is no data",
     },
     correct: "b",
     image: "/images/eye.jpg",
@@ -167,20 +167,20 @@ export default function Section1Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="relative top-14 sm:top-8 h-full w-full max-w-2xl bg-white border-2 border-green-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="relative top-14 sm:top-8 h-full w-full max-w-2xl max-h-[65dvh] bg-white border-2 border-green-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
-            <h2 className="text-lg font-semibold">
+            <h2 className="text-md sm:text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
             </h2>
-            <p>{question.prompt}</p>
+            <p className="text-sm sm:text-md">{question.prompt}</p>
             {question.image && (
               <img
                 src={question.image}
                 alt="Question visual"
-                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${(current + 1 == 1 || current + 1 >= 4) && "max-w-55 sm:max-w-80 h-full rounded"} mx-auto`}
+                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${(current + 1 == 1 || current + 1 >= 4) && "max-h-[15dvh] max-w-55 sm:max-w-80 h-full rounded"} mx-auto`}
               />
             )}
-            <div className="flex flex-col gap-3 mt-4">
+            <div className="flex flex-col gap-1 sm:gap-3 sm:mt-4">
               {(["a", "b", "c"] as Choice[]).map((c) => {
                 const isSelected = selected === c;
                 let style =

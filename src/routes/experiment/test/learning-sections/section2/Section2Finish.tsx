@@ -108,7 +108,7 @@ export default function Section2Finish() {
       animate={{ opacity: 1, scale: 1 }}
       className="w-full max-w-2xl flex flex-col items-center text-center"
     >
-      <h2 className="text-3xl font-bold mb-2">🎉 Section 2 Complete!</h2>
+      <h2 className="text-xl sm:text-3xl font-bold mb-2">🎉 Section 2 Complete!</h2>
 
       <motion.div
         key={pts}
@@ -117,10 +117,10 @@ export default function Section2Finish() {
         transition={{ duration: 0.4 }}
         className="mb-10"
       >
-        <div className="text-5xl font-extrabold text-orange-500">
+        <div className="text-2xl sm:text-5xl font-extrabold text-orange-500">
           +{formatNumber(pts)} Points
         </div>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
           Total Points: {ctx.pts.toLocaleString()}
         </p>
       </motion.div>
@@ -149,9 +149,11 @@ export default function Section2Finish() {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2 sm:p-5 shadow-sm hover:shadow-md transition">
       <p className="text-xs text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-slate-800">{value}</p>
+      <p className="mt-2 text-lg sm:text-2xl font-bold text-slate-800">
+        {value}
+      </p>
     </div>
   );
 }
