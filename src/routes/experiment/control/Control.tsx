@@ -76,7 +76,7 @@ export default function Control({ participantId }: Props) {
   };
 
   return (
-    <div className="h-full flex flex-col p-6 items-center overflow-y-auto">
+    <div className="h-full max-w-screen w-full flex flex-col p-6 items-center overflow-y-auto">
       <header className="mb-2 text-center relative">
         <h1 className="text-2xl font-bold">Learning Modules</h1>
         <p className="text-sm text-slate-600">Participant: {participantId}</p>
@@ -104,7 +104,7 @@ export default function Control({ participantId }: Props) {
               The term <b>Artificial Intelligence (AI)</b> is often used to
               describe modern systems like ChatGPT or Gemini. These systems are
               more accurately known as <b>Large Language Models (LLMs)</b>.
-            </p>
+            </p>  
 
             <p>
               LLMs analyse extremely large collections of text and learn

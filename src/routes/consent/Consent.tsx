@@ -190,7 +190,7 @@ export default function InfoConsentPage() {
   return (
     <div className="min-h-screen bg-neutral-200 text-slate-900 flex items-center justify-center">
       {storedId && storedConsent && !currentStage ? (
-        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
+        <main className="min-h-screen bg-slate-50 text-slate-900 w-full px-4 sm:max-w-1/2 text-center">
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">
@@ -233,14 +233,16 @@ export default function InfoConsentPage() {
                   ? "opacity-60 cursor-not-allowed"
                   : "hover:bg-green-700 hover:cursor-pointer active:bg-green-800"
               }`}
-              onClick={() => { window.location.href = "/experiment"; }}
+              onClick={() => {
+                window.location.href = "/experiment";
+              }}
             >
               Proceed to Study
             </button>
           </div>
         </main>
       ) : currentStage ? (
-        <main className="min-h-screen bg-slate-50 text-slate-900 w-full max-w-1/2 text-center">
+        <main className="min-h-screen bg-slate-50 text-slate-900 w-full px-4 sm:max-w-1/2 text-center">
           <div className="mx-auto max-w-3xl px-4 py-10"></div>
           <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h2 className="text-lg font-semibold">
@@ -355,6 +357,11 @@ export default function InfoConsentPage() {
             {/* Information Sheet */}
             <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
               <h2 className="text-lg font-semibold">Information Sheet</h2>
+
+              <p className="font-bold italic text-sm my-4">
+                This experience was developed desktop-first. For the best
+                experience, using a desktop or a laptop device is recommended.
+              </p>
 
               <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-700">
                 <p>
