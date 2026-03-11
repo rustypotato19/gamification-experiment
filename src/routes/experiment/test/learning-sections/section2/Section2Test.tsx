@@ -124,7 +124,7 @@ export default function Section2Test() {
   };
 
   return (
-    <div className="relative bottom-28 flex flex-col items-center justify-center">
+    <div className="relative bottom-16 sm:bottom-28 flex flex-col items-center justify-center">
       <AnimatePresence mode="wait">
         {isIntro && (
           <motion.div

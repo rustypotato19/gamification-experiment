@@ -9,14 +9,13 @@ function formatNumber(number: number) {
   return number.toLocaleString();
 }
 
-function getDateNow(){
-    return Date.now()
+function getDateNow() {
+  return Date.now();
 }
 
 export default function Section3Finish() {
   const ctx = useContext(TestContext);
   const [nextDisabled, setNextDisabled] = useState(true);
-  const [uploaded, setUploaded] = useState(false);
 
   // Unlock "Next" button after a delay
   useEffect(() => {
@@ -32,8 +31,12 @@ export default function Section3Finish() {
   }, [ctx]);
 
   const startTime = ctx ? ctx.testMilestonesType.section3StartTime : 0;
-  const endTime = ctx ? ctx.testMilestonesType.section3EndTime == null ? 0 : getDateNow() : getDateNow();
-  
+  const endTime = ctx
+    ? ctx.testMilestonesType.section3EndTime == null
+      ? 0
+      : getDateNow()
+    : getDateNow();
+
   const rawTimeTaken = startTime ? endTime - startTime : 0;
   const seconds = Math.floor(rawTimeTaken / 1000);
 
@@ -55,17 +58,17 @@ export default function Section3Finish() {
   // Confetti effect if accuracy > 50%
   useEffect(() => {
     if (total > 0 && correct / total > 0.5) {
-      const duration = 2000;
+      const duration = window.innerWidth > 480 ? 2000 : 1000;
       const end = Date.now() + duration;
       const frame = () => {
         confetti({
-          particleCount: 3,
+          particleCount: window.innerWidth > 480 ? 3 : 1,
           angle: 60,
           spread: 55,
           origin: { x: 0.01, y: 0.7 },
         });
         confetti({
-          particleCount: 3,
+          particleCount: window.innerWidth > 480 ? 3 : 1,
           angle: 120,
           spread: 55,
           origin: { x: 0.99, y: 0.7 },
@@ -92,7 +95,6 @@ export default function Section3Finish() {
           percentage: scorePercent,
         }),
       });
-      setUploaded(true);
     }
     upload();
   }, [correct, total, scorePercent, rawTimeTaken]);
@@ -140,12 +142,6 @@ export default function Section3Finish() {
       >
         Next Section
       </button>
-
-      {uploaded && (
-        <p className="mt-6 text-sm text-slate-500">
-          Your results have been securely recorded.
-        </p>
-      )}
     </motion.div>
   );
 }

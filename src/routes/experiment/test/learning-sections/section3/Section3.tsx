@@ -66,7 +66,7 @@ export default function Section3() {
       title: "Simplifying Models",
       text: (
         <div className="flex flex-col justify-center items-center gap-4">
-          <div className="flex flex-row justify-center items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
             <div className="flex flex-col justify-center items-center gap-4">
               <p>
                 LLMs such as Chat GPT have become huge, general-purpose tools.
@@ -117,8 +117,8 @@ export default function Section3() {
     {
       title: "Your Usage",
       text: (
-        <div className="flex flex-col justify-center items-center w-screen">
-          <img src="/images/intentional-prompts.png" className="w-240" />
+        <div className="flex flex-col justify-center items-center w-screen px-6">
+          <img src="/images/intentional-prompts.png" className="w-240 max-w-full" />
         </div>
       ),
     },
@@ -194,10 +194,12 @@ export default function Section3() {
 
   return (
     <div className="flex flex-col w-full h-full items-center justify-center gap-6 px-4 ">
-      <div className="absolute top-12 w-full max-w-md">
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      {/* Progress Bar */}
+      <div className="absolute top-7 sm:top-12 w-full max-w-full sm:max-w-md px-8 sm:px-0">
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden max-w-full">
           <motion.div
             className="h-full bg-indigo-500"
+            initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.5 }}
           />

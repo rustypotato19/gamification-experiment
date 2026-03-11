@@ -100,9 +100,7 @@ export default function Section2() {
             <img src="/gifs/electric.gif" className="w-10" />
           </div>
           <div>
-            <p>
-              Per query, this number drops to ~1 Wh - however:
-            </p>
+            <p>Per query, this number drops to ~1 Wh - however:</p>
             <p className="mt-2 italic">
               365 days x 2.5 bil. queries x 1 Wh = ~912.5 billion Wh (or 912,500
               MWh)
@@ -261,8 +259,8 @@ export default function Section2() {
   return (
     <div className="flex flex-col w-full h-full items-center justify-center gap-6 px-4">
       {/* Progress Bar */}
-      <div className="absolute top-12 w-full max-w-md">
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="absolute top-7 sm:top-12 w-full max-w-full sm:max-w-md px-8 sm:px-0">
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden max-w-full">
           <motion.div
             className="h-full bg-orange-400"
             initial={{ width: 0 }}

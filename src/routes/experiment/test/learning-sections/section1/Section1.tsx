@@ -51,13 +51,13 @@ export default function Section1() {
         </div>
       ),
       text: (
-        <div className="flex justify-center items-center">
+        <div className="flex flex-col sm:flex-row justify-center items-center">
           <p className="text-lg mt-4">
             In this section, you'll be introduced to "<b>AI</b>", it's general
             impacts on the environment and why these impacts are so difficult to
             see.
           </p>
-          <img src="/images/ai-robot.png" className="h-50" />
+          <img src="/images/ai-robot.png" className="h-40 mt-6 sm:mt-0" />
         </div>
       ),
     },
@@ -211,8 +211,8 @@ export default function Section1() {
   return (
     <div className="flex flex-col w-full h-full items-center justify-center gap-6 px-4">
       {/* Progress Bar */}
-      <div className="absolute top-12 w-full max-w-md">
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="absolute top-7 sm:top-12 w-full max-w-full sm:max-w-md px-8 sm:px-0">
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden max-w-full">
           <motion.div
             className="h-full bg-green-700"
             initial={{ width: 0 }}

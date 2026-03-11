@@ -167,7 +167,7 @@ export default function Section1Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="relative top-8 h-full w-full max-w-2xl bg-white border-2 border-green-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="relative top-14 sm:top-8 h-full w-full max-w-2xl bg-white border-2 border-green-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
@@ -177,13 +177,14 @@ export default function Section1Test() {
               <img
                 src={question.image}
                 alt="Question visual"
-                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${(current+1 == 1 || current+1 >= 4) && "max-w-80 h-full rounded"} mx-auto`}
+                className={`${current + 1 == 2 && "h-30 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${current + 1 == 3 && "h-60 w-full rounded-2xl drop-shadow-xl border border-black/20"} ${(current + 1 == 1 || current + 1 >= 4) && "max-w-55 sm:max-w-80 h-full rounded"} mx-auto`}
               />
             )}
             <div className="flex flex-col gap-3 mt-4">
               {(["a", "b", "c"] as Choice[]).map((c) => {
                 const isSelected = selected === c;
-                let style = "p-3 rounded-xl ring-1 cursor-pointer transition";
+                let style =
+                  "p-3 rounded-xl ring-1 cursor-pointer transition text-sm sm:text-md";
 
                 if (showFeedback) {
                   if (c === question.correct)

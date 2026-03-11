@@ -144,83 +144,213 @@ function TestInner({ participantId }: Props) {
   if (!ctx) return null;
 
   return (
-    <div className="h-full flex flex-col p-4 md:p-6 bg-neutral-200">
-      <main className="flex-1 bg-white rounded-3xl shadow-xl p-8 flex flex-col">
+    <div className="h-full max-h-screen flex flex-col p-4 md:p-6 bg-neutral-200">
+      <main className="flex-1 max-h-full bg-white rounded-3xl shadow-xl p-8 flex flex-col">
         {/* Header Row */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <p className="text-xs text-slate-500">
-              Participant: {participantId}
-            </p>
-            <h1 className="text-2xl font-bold">AI Impact Mission 🚀</h1>
-            <button
-              onClick={() => {
-                setShowWithdrawPopup(true);
-              }}
-              className="w-fit h-fit px-4 py-2 bg-red-700 text-white font-bold rounded-2xl text-sm relative top-4 hover:bg-red-500 hover:cursor-pointer"
-            >
-              Withdraw
-            </button>
-          </div>
+        {window.innerWidth > 480 ? (
+          <div className="flex justify-between items-start mb-8">
+            <div>
+              <p className="text-xs text-slate-500">
+                Participant: {participantId}
+              </p>
+              <h1 className="text-2xl font-bold">AI Impact Mission 🚀</h1>
+              <button
+                onClick={() => {
+                  setShowWithdrawPopup(true);
+                }}
+                className="w-fit h-fit px-4 py-2 bg-red-700 text-white font-bold rounded-2xl text-sm relative top-4 hover:bg-red-500 hover:cursor-pointer"
+              >
+                Withdraw
+              </button>
+            </div>
 
-          {showWithrawPopup && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">
-              <div className="flex gap-3 flex-col justify-center items-center w-fit h-fit bg-white py-8 px-16 rounded-2xl border drop-shadow-2xl">
-                <h1 className="font-bold text-2xl mb-8">
-                  Confirm Withdrawal from Study
-                </h1>
-                {dbError ? (
-                  <>
-                    <p>Error: {dbError}</p>
-                    <p>Unable to process withdrawal at this time</p>
-                    <p>
-                      Please reach out to me at{" "}
-                      <strong>konrad.mitura@yorksj.ac.uk</strong>, or{" "}
-                      <strong>konradmitura8@gmail.com</strong> stating your
-                      participant id and the error above.
-                    </p>
-                    <p>Participant ID: {participantId}</p>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      If you withdraw from this study, you will not be able to
-                      participate again.
-                    </p>
-                    <p>
-                      Your records, scores and progress may still be retained
-                      until the deadline for this dissertation
-                    </p>
-                    <p className="mt-6 font-semibold">
-                      Do you still wish to withdraw?
-                    </p>
-                  </>
-                )}
-                <div className="w-2/3 flex items-center justify-between mt-6">
-                  <button
-                    onClick={() => {
-                      setShowWithdrawPopup(false);
-                    }}
-                    className="text-xl font-bold bg-red-700 text-white px-3 py-1 rounded-xl hover:bg-red-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
-                    disabled={dbBusy}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => {
-                      onWithdraw();
-                    }}
-                    className="text-xl font-bold bg-emerald-700 text-white px-3 py-1 rounded-xl hover:bg-emerald-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
-                    disabled={dbBusy}
-                  >
-                    Withdraw
-                  </button>
+            {showWithrawPopup && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">
+                <div className="flex gap-3 flex-col justify-center items-center w-fit h-fit bg-white py-8 px-16 rounded-2xl border drop-shadow-2xl">
+                  <h1 className="font-bold text-2xl mb-8">
+                    Confirm Withdrawal from Study
+                  </h1>
+                  {dbError ? (
+                    <>
+                      <p>Error: {dbError}</p>
+                      <p>Unable to process withdrawal at this time</p>
+                      <p>
+                        Please reach out to me at{" "}
+                        <strong>konrad.mitura@yorksj.ac.uk</strong>, or{" "}
+                        <strong>konradmitura8@gmail.com</strong> stating your
+                        participant id and the error above.
+                      </p>
+                      <p>Participant ID: {participantId}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        If you withdraw from this study, you will not be able to
+                        participate again.
+                      </p>
+                      <p>
+                        Your records, scores and progress may still be retained
+                        until the deadline for this dissertation
+                      </p>
+                      <p className="mt-6 font-semibold">
+                        Do you still wish to withdraw?
+                      </p>
+                    </>
+                  )}
+                  <div className="w-2/3 flex items-center justify-between mt-6">
+                    <button
+                      onClick={() => {
+                        setShowWithdrawPopup(false);
+                      }}
+                      className="text-xl font-bold bg-red-700 text-white px-3 py-1 rounded-xl hover:bg-red-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                      disabled={dbBusy}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        onWithdraw();
+                      }}
+                      className="text-xl font-bold bg-emerald-700 text-white px-3 py-1 rounded-xl hover:bg-emerald-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                      disabled={dbBusy}
+                    >
+                      Withdraw
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Score + Streak (Hidden on Stage 0) */}
+            {/* Score + Streak (Hidden on Stage 0) */}
+            {window.innerWidth > 480 && (
+              <AnimatePresence>
+                {allowedStages.includes(ctx.currentIndex) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="flex gap-4"
+                  >
+                    {/* Score Card */}
+                    <div className="bg-linear-to-br from-orange-500 to-red-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-fit h-fit transition-all duration-200">
+                      <span className="text-xs uppercase tracking-wide opacity-80">
+                        Score
+                      </span>
+                      <motion.span
+                        key={ctx.pts}
+                        initial={{ scale: 1.2 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.25 }}
+                        className="text-xl font-bold"
+                      >
+                        {formatNumber(ctx.pts)}
+                      </motion.span>
+                      <span className="text-xs opacity-80">Pts</span>
+                    </div>
+
+                    {/* Streak Card */}
+                    <div className="bg-linear-to-br from-indigo-500 to-blue-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-fit h-fit transition-all duration-200">
+                      <span className="text-xs uppercase tracking-wide opacity-80">
+                        Streak
+                      </span>
+                      <span className="text-xl font-bold flex items-center">
+                        🔥
+                        <span className="relative top-px right-0.5">
+                          {ctx.streak}
+                        </span>
+                      </span>
+                      <span className="text-xs opacity-80">
+                        x{1 + ctx.streak / 5}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
+        ) : (
+          <div className="flex justify-between items-start mb-8">
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-slate-500 mt-4">
+                Participant: {participantId}
+              </p>
+              <button
+                onClick={() => {
+                  setShowWithdrawPopup(true);
+                }}
+                className="w-fit h-fit px-4 py-2 bg-red-700 text-white font-bold rounded-2xl text-sm relative top-4 hover:bg-red-500 hover:cursor-pointer"
+              >
+                Withdraw
+              </button>
+            </div>
+
+            {showWithrawPopup && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-[50%] -translate-y-[50%] w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">
+                <div className="flex gap-3 flex-col justify-center items-center w-fit h-fit bg-white py-8 px-16 rounded-2xl border drop-shadow-2xl">
+                  <h1 className="font-bold text-2xl mb-8">
+                    Confirm Withdrawal from Study
+                  </h1>
+                  {dbError ? (
+                    <>
+                      <p>Error: {dbError}</p>
+                      <p>Unable to process withdrawal at this time</p>
+                      <p>
+                        Please reach out to me at{" "}
+                        <strong>konrad.mitura@yorksj.ac.uk</strong>, or{" "}
+                        <strong>konradmitura8@gmail.com</strong> stating your
+                        participant id and the error above.
+                      </p>
+                      <p>Participant ID: {participantId}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        If you withdraw from this study, you will not be able to
+                        participate again.
+                      </p>
+                      <p>
+                        Your records, scores and progress may still be retained
+                        until the deadline for this dissertation
+                      </p>
+                      <p className="mt-6 font-semibold">
+                        Do you still wish to withdraw?
+                      </p>
+                    </>
+                  )}
+                  <div className="w-2/3 flex items-center justify-between mt-6">
+                    <button
+                      onClick={() => {
+                        setShowWithdrawPopup(false);
+                      }}
+                      className="text-xl font-bold bg-red-700 text-white px-3 py-1 rounded-xl hover:bg-red-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                      disabled={dbBusy}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => {
+                        onWithdraw();
+                      }}
+                      className="text-xl font-bold bg-emerald-700 text-white px-3 py-1 rounded-xl hover:bg-emerald-500 hover:cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed"
+                      disabled={dbBusy}
+                    >
+                      Withdraw
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Content Area */}
+        <div className="w-full max-w-screen h-full flex items-center justify-center">
+          {questions[ctx.currentIndex]}
+        </div>
+
+        {/* Score + Streak (Hidden on Stage 0) */}
+        {window.innerWidth <= 480 && (
           <AnimatePresence>
             {allowedStages.includes(ctx.currentIndex) && (
               <motion.div
@@ -228,10 +358,10 @@ function TestInner({ participantId }: Props) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="flex gap-4"
+                className="flex gap-3 absolute bottom-10 left-0 w-full px-10 items-center justify-between"
               >
                 {/* Score Card */}
-                <div className="bg-linear-to-br from-orange-500 to-red-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-fit h-fit transition-all duration-200">
+                <div className="bg-linear-to-br from-orange-500 to-red-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-1/2 h-fit transition-all duration-200">
                   <span className="text-xs uppercase tracking-wide opacity-80">
                     Score
                   </span>
@@ -248,15 +378,13 @@ function TestInner({ participantId }: Props) {
                 </div>
 
                 {/* Streak Card */}
-                <div className="bg-linear-to-br from-indigo-500 to-blue-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-fit h-fit transition-all duration-200">
+                <div className="bg-linear-to-br from-indigo-500 to-blue-700 text-white px-4 py-2 rounded-2xl shadow-lg flex flex-col items-center w-1/2 h-fit transition-all duration-200">
                   <span className="text-xs uppercase tracking-wide opacity-80">
                     Streak
                   </span>
                   <span className="text-xl font-bold flex items-center">
                     🔥
-                    <span className="relative top-px right-0.5">
-                      {ctx.streak}
-                    </span>
+                    <span>{ctx.streak}</span>
                   </span>
                   <span className="text-xs opacity-80">
                     x{1 + ctx.streak / 5}
@@ -265,12 +393,7 @@ function TestInner({ participantId }: Props) {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-
-        {/* Content Area */}
-        <div className="flex-1 flex items-center justify-center">
-          {questions[ctx.currentIndex]}
-        </div>
+        )}
       </main>
     </div>
   );

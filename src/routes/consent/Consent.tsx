@@ -207,8 +207,8 @@ export default function InfoConsentPage() {
               </p>
             )}
             <p className="mt-4 text-sm text-slate-600">
-              If you have this page open in error or wish to withdraw, please
-              click below.
+              If you have this page open in error and/ or wish to withdraw,
+              please click below.
             </p>
             <button
               type="button"
@@ -221,6 +221,21 @@ export default function InfoConsentPage() {
               disabled={dbBusy}
             >
               {dbBusy ? "Processing…" : "Withdraw from Study"}
+            </button>
+            <p className="mt-4 text-sm">
+              If you wish to proceed to the study portion of this experience,
+              please click below.
+            </p>
+            <button
+              type="button"
+              className={`mt-4 rounded-xl bg-green-600 px-4 py-3 text-sm text-white font-semibold ring-1 ring-slate-200 transition-all duration-200 ${
+                dbBusy
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:bg-green-700 hover:cursor-pointer active:bg-green-800"
+              }`}
+              onClick={() => { window.location.href = "/experiment"; }}
+            >
+              Proceed to Study
             </button>
           </div>
         </main>

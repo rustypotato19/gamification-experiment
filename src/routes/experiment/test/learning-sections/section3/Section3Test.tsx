@@ -25,7 +25,7 @@ const QUESTIONS: Question[] = [
       c: "Only companies matter",
     },
     correct: "b",
-    image: "/images/globe-hands.png"
+    image: "/images/globe-hands.png",
   },
   {
     id: 2,
@@ -51,7 +51,8 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 4,
-    prompt: "Which of these options would help reduce energy and water consumption of LLMs?",
+    prompt:
+      "Which of these options would help reduce energy and water consumption of LLMs?",
     options: {
       a: "Simplifying LLMs for specific uses",
       b: "Creating more general-purpose models",
@@ -129,7 +130,7 @@ export default function Section3Test() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center bottom-28">
+    <div className="relative flex flex-col items-center justify-center bottom-14 sm:bottom-28 w-full max-w-screen">
       <AnimatePresence mode="wait">
         {/* Intro screen */}
         {isIntro && (
@@ -143,7 +144,8 @@ export default function Section3Test() {
           >
             <h2 className="text-xl font-semibold">Section 3 Quiz</h2>
             <p className="mt-3">
-              Let's test your understanding of reducing AI's environmental impact.
+              Let's test your understanding of reducing AI's environmental
+              impact.
             </p>
             <button
               onClick={() => setCurrent(0)}
@@ -162,7 +164,7 @@ export default function Section3Test() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.5 }}
-            className="w-full min-w-lg max-w-2xl bg-white border-2 border-indigo-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
+            className="w-full sm:min-w-lg max-w-full bg-white border-2 border-indigo-700/40 p-6 rounded-2xl drop-shadow-xl flex flex-col gap-4"
           >
             <h2 className="text-lg font-semibold">
               Question {current + 1} / {QUESTIONS.length}
