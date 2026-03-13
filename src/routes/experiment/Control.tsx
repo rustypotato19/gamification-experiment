@@ -76,7 +76,7 @@ export default function Control({ participantId }: Props) {
   };
 
   return (
-    <div className="h-full max-w-screen w-full flex flex-col p-6 items-center overflow-y-auto">
+    <div className="h-full max-w-screen w-full flex flex-col p-2 sm:p-6 items-center overflow-y-auto">
       <header className="mb-2 text-center relative">
         <h1 className="text-2xl font-bold">Learning Modules</h1>
         <p className="text-sm text-slate-600">Participant: {participantId}</p>

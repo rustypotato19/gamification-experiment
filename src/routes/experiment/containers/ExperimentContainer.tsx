@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import SectionLearning from "../components/SectionLearning";
 import SectionTest from "../components/SectionTest";
 import SectionFinish from "../components/SectionFinish";
 import { experimentSectionData } from "../config/experimentSectionData";
+import TestContext from "../context/TestContext";
 
 type Phase = "learning" | "test" | "finish";
 
@@ -12,6 +13,9 @@ export default function ExperimentContainer() {
   const [phase, setPhase] = useState<Phase>("learning");
 
   const current = experimentSectionData[section];
+
+  const ctx = useContext(TestContext);
+  if (!ctx) return null;
 
   if (phase === "learning")
     return (
@@ -29,16 +33,8 @@ export default function ExperimentContainer() {
       />
     );
 
+  const { title, message } = current.finish;
+
   if (phase === "finish")
-    return (
-      <SectionFinish
-        {...current.finish}
-        onNext={() => {
-          if (section < experimentSectionData.length - 1) {
-            setSection((s) => s + 1);
-            setPhase("learning");
-          }
-        }}
-      />
-    );
+    return <SectionFinish title={title} message={message} />;
 }

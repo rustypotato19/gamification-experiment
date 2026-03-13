@@ -4,20 +4,22 @@ export const Section1LearningData: Step[] = [
   {
     title: (
       <div className="flex flex-col gap-4">
-        <span className="text-xl sm:text-2xl">Section 1 of 3</span>
-        What is AI? And how does it affect the environment?
+        <span className="text-md sm:text-2xl">Section 1 of 3</span>
+        <span className="text-sm sm:text-2xl">
+          What is AI? And how does it affect the environment?
+        </span>
       </div>
     ),
 
     text: (
       <div className="flex flex-col sm:flex-row justify-center items-center">
-        <p className="text-md sm:text-lg mt-4">
+        <p className="text-sm sm:text-lg mt-4">
           In this section, you'll be introduced to "<b>AI</b>", its general
           impacts on the environment and why these impacts are so difficult to
           see.
         </p>
 
-        <img src="/images/ai-robot.png" className="h-40 mt-6 sm:mt-0" />
+        <img src="/images/ai-robot.png" className="h-30 sm:h-40 mt-6 sm:mt-0" />
       </div>
     ),
   },
@@ -28,12 +30,15 @@ export const Section1LearningData: Step[] = [
     text: (
       <div className="flex flex-col justify-center items-center gap-2">
         <p>
-          <b>AI</b> is a scary term, but what we've come to know as AI — from
-          the likes of ChatGPT or Gemini — are actually{" "}
+          <b>AI</b> is a scary term, but what we've come to know as AI - from
+          the likes of ChatGPT or Gemini - are actually{" "}
           <b>Large Language Models</b>.
         </p>
 
-        <img src="/images/different-languages.jpg" className="max-h-40 w-80" />
+        <img
+          src="/images/different-languages.jpg"
+          className="max-h-30 sm:max-h-40 w-80"
+        />
       </div>
     ),
   },
@@ -77,7 +82,9 @@ export const Section1LearningData: Step[] = [
 
         <p>
           They can require <i>millions of hours</i> of simulations requiring
-          <span className="text-4xl mx-2 italic applyElectricFont">huge</span>
+          <span className="text-md mx-2 italic applyElectricFont animate-grow-once">
+            huge
+          </span>
           amounts of processing power.
         </p>
 

@@ -4,10 +4,17 @@ export type TestContextType = {
   pts: number;
   streak: number;
   currentIndex: number;
+  showPtsAndStreak: boolean;
+  pid: string;
   setCurrentIndex: (index: number) => void;
+  setShowPtsAndStreak: (b: boolean) => void;
+  setPid: (pid: string) => void;
   next: () => void;
   addCorrect: (multiplier?: number) => void;
   addIncorrect: () => void;
+  formatNumber: (n: number) => string;
+  formatTime: (n: number) => string;
+  getDateNow: () => number;
   testMilestonesType: TestMilestonesType;
 };
 

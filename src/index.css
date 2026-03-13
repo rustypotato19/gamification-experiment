@@ -2,11 +2,27 @@
 
 @font-face {
   font-family: electricFont;
-  src: url("/fonts/cm-font/CmFont-pgggZ.ttf")
+  src: url("/fonts/cm-font/CmFont-pgggZ.ttf");
 }
 
 .applyElectricFont {
   font-family: electricFont;
+}
+
+@keyframes growOnce {
+  0% {
+    transform: scale(1);
+    margin: 0;
+  }
+  100% {
+    transform: scale(1.8);
+    margin: 0 1.2rem;
+  }
+}
+
+.animate-grow-once {
+  display: inline-block;
+  animation: growOnce 1s ease-out forwards;
 }
 
 .fullscreen-no-margin {

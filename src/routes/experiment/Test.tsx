@@ -5,6 +5,7 @@ import TestContext from "./context/TestContext";
 
 // Import config
 import { experimentSections } from "./config/experimentSections";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Props = { participantId: string };
 
@@ -14,12 +15,10 @@ function TestInner({ participantId }: Props) {
   const [dbBusy, setDbBusy] = useState(false);
   const [dbError, setDbError] = useState<string | null>(null);
 
-  const sections = experimentSections; // do not spread or rebuild
+  const [score, setScore] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
-  // Optional: stages where you want to show score/streak
-  const allowedStages = experimentSections
-    .map((_, i) => i * 3) // learning index
-    .filter((i) => i < sections.length);
+  const sections = experimentSections;
 
   useEffect(() => {
     async function initProgress() {
@@ -27,7 +26,7 @@ function TestInner({ participantId }: Props) {
       const data = await res.json();
       if (!data.ok) return;
 
-      console.log(data)
+      // console.log(data);
 
       const lastIndexMap = experimentSections
         .map((_, i) => i * 3) // learning indices
@@ -38,6 +37,15 @@ function TestInner({ participantId }: Props) {
     }
     initProgress();
   }, [ctx, participantId, sections.length]);
+
+  useEffect(() => {
+    if (!ctx) return;
+    function updateLocalScores() {
+      setScore(ctx ? ctx.pts : 0);
+      setStreak(ctx ? ctx.streak : 0);
+    }
+    updateLocalScores();
+  }, [ctx, ctx?.pts, ctx?.streak]);
 
   const postJson = async <T,>(url: string, body: unknown) => {
     try {
@@ -74,53 +82,70 @@ function TestInner({ participantId }: Props) {
 
   const CurrentSection = sections[ctx.currentIndex];
 
-  console.log(
+  /* console.log(
     "currentIndex",
     ctx.currentIndex,
     "CurrentSection",
     CurrentSection.name,
-  );
+  ); */
 
   return (
-    <div className="h-full w-full flex flex-col p-4 md:p-6 bg-neutral-200">
-      <main className="flex-1 max-h-full bg-white rounded-3xl shadow-xl p-8 flex flex-col items-center justify-center">
+    <div className="h-full w-full flex flex-col p-2 md:p-6 bg-neutral-200">
+      <main className="flex-1 max-h-full bg-white rounded-3xl shadow-xl p-4 sm:p-8 flex flex-col items-center justify-center">
         <div className="flex w-full h-fit justify-between items-start">
           <p className="text-xs text-slate-500">Participant: {participantId}</p>
           <button
             onClick={() => setShowWithdrawPopup(true)}
-            className="px-4 py-2 bg-red-700 text-white font-bold rounded-2xl hover:bg-red-500"
+            className="px-4 py-2 bg-red-700 text-white font-bold rounded-2xl hover:bg-red-500 hover:cursor-pointer"
           >
             Withdraw
           </button>
         </div>
 
-        {showWithdrawPopup && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center">
-            <div className="bg-white py-8 px-16 rounded-2xl shadow-xl flex flex-col items-center">
-              <h1 className="font-bold text-2xl mb-6">Confirm Withdrawal</h1>
-              {dbError ? (
-                <p className="text-red-500">{dbError}</p>
-              ) : (
-                <p>Do you really want to withdraw?</p>
-              )}
-              <div className="flex gap-4 mt-6">
-                <button
-                  onClick={() => setShowWithdrawPopup(false)}
-                  className="bg-red-700 text-white px-4 py-2 rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={onWithdraw}
-                  className="bg-emerald-700 text-white px-4 py-2 rounded-lg"
-                  disabled={dbBusy}
-                >
-                  Withdraw
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {showWithdrawPopup && (
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-screen z-50 bg-black/30 backdrop-blur-xs flex justify-center items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.div
+                className="bg-white py-8 px-16 rounded-2xl shadow-xl flex flex-col items-center"
+                initial={{ scale: 0.85, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.85, y: 20 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+              >
+                <h1 className="font-bold text-2xl mb-6">Confirm Withdrawal</h1>
+
+                {dbError ? (
+                  <p className="text-red-500">{dbError}</p>
+                ) : (
+                  <p>Do you really want to withdraw?</p>
+                )}
+
+                <div className="flex gap-4 mt-6">
+                  <button
+                    onClick={() => setShowWithdrawPopup(false)}
+                    className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-500 hover:cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={onWithdraw}
+                    className="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 hover:cursor-pointer"
+                    disabled={dbBusy}
+                  >
+                    Withdraw
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Main content */}
         <div className="flex-1 max-h-[80dvh] flex items-center justify-center">
@@ -128,17 +153,35 @@ function TestInner({ participantId }: Props) {
         </div>
 
         {/* Points + streak */}
-        {window.innerWidth > 480 &&
-          allowedStages.includes(ctx.currentIndex) && (
-            <div className="flex gap-4 mt-4">
-              <div className="bg-orange-500 text-white px-4 py-2 rounded-2xl">
-                Score: {ctx.pts}
-              </div>
-              <div className="bg-indigo-500 text-white px-4 py-2 rounded-2xl">
-                Streak: {ctx.streak}
-              </div>
-            </div>
-          )}
+        {window.innerWidth > 480 && (
+          <AnimatePresence>
+            {ctx.showPtsAndStreak && (
+              <motion.div
+                key="scorebar"
+                className="flex gap-4 mt-4"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.35 }}
+              >
+                <motion.div
+                  className="bg-orange-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 0.25 }}
+                >
+                  Score: {score}
+                </motion.div>
+                <motion.div
+                  className="bg-indigo-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 0.25 }}
+                >
+                  Streak: {streak}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
       </main>
     </div>
   );

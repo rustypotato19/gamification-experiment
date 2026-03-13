@@ -9,6 +9,10 @@ export default function TestProvider({ children }: Props) {
   const [pts, setPts] = useState(0);
   const [streak, setStreak] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showPtsAndStreak, setShowPtsAndStreak] = useState<boolean>(false);
+  const [pid, setPid] = useState<string>(
+    () => localStorage.getItem("participantId") || "",
+  );
 
   // Section 1
   const [section1Pts, setSection1Pts] = useState(0);
@@ -77,6 +81,27 @@ export default function TestProvider({ children }: Props) {
     }
   };
 
+  function formatNumber(n: number) {
+    if (n >= 1000000) {
+      return (n / 1000000).toFixed(2) + "M";
+    } else if (n >= 1000) {
+      return (n / 1000).toFixed(2) + "K";
+    } else return n.toLocaleString();
+  }
+
+  function formatTime(time: number) {
+    const seconds = time < 0 ? (time * -1) / 1000 : time / 1000;
+    if (seconds / 3600 >= 1)
+      return `${Math.floor(seconds / 3660)}h  ${Math.floor((seconds % 3600) / 60)}m ${Math.floor(seconds % 60)}s`;
+    else if (seconds / 60 >= 1)
+      return `${Math.floor(seconds / 60)}m ${Math.floor(seconds % 60)}s`;
+    return `${Math.floor(seconds)}s`;
+  }
+
+  function getDateNow() {
+    return Date.now();
+  }
+
   const next = () => {
     setCurrentIndex((i) => i + 1);
   };
@@ -128,10 +153,17 @@ export default function TestProvider({ children }: Props) {
         pts,
         streak,
         currentIndex,
+        showPtsAndStreak,
+        pid,
         setCurrentIndex,
+        setShowPtsAndStreak,
+        setPid,
         next,
         addCorrect,
         addIncorrect,
+        formatNumber,
+        formatTime,
+        getDateNow,
         testMilestonesType,
       }}
     >
