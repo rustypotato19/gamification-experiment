@@ -2,14 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import TestProvider from "./context/TestProvider";
 import TestContext from "./context/TestContext";
 import { AnimatePresence, motion } from "framer-motion";
-
-// Import config
 import { experimentSections } from "./config/experimentSections";
+import SectionFinish from "./components/SectionFinish";
 
 type Props = { participantId: string };
+type Phase = "learning" | "finish";
 
 function TestInner({ participantId }: Props) {
   const ctx = useContext(TestContext);
+  const [phase, setPhase] = useState<Phase>("learning");
+  const [progressApplied, setProgressApplied] = useState(false);
   const [showWithdrawPopup, setShowWithdrawPopup] = useState(false);
   const [dbBusy, setDbBusy] = useState(false);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -19,52 +21,56 @@ function TestInner({ participantId }: Props) {
 
   const sections = experimentSections;
 
-  // Fetch participant progress
+  // --- Fetch progress only ONCE ---
   useEffect(() => {
+    if (!ctx || progressApplied) return;
+
     async function initProgress() {
       try {
         const res = await fetch(`/api/section-progress/${participantId}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
-        console.log("Fetched progress:", data);
-
-        if (!data.ok || data.progress == null) {
-          console.warn("No progress data available, defaulting to index 0");
-          ctx?.setCurrentIndex(0);
-          return;
-        }
-
-        // For simplicity, just map last_completed_stage to section index
-        // You can adjust if you have multiple stages per section
-        const lastCompletedStage = data.progress.last_completed_stage ?? 0;
-
+        const lastCompletedStage = data.progress?.last_completed_stage ?? 0;
         const mappedIndex = Math.min(lastCompletedStage, sections.length - 1);
 
-        console.log(
-          "Mapping last_completed_stage",
-          lastCompletedStage,
-          "to currentIndex",
-          mappedIndex,
-        );
-
-        ctx?.setCurrentIndex(mappedIndex);
+        if (ctx) ctx.setCurrentIndex(mappedIndex);
+        setProgressApplied(true); // prevent future overwrites
       } catch (err) {
-        console.error("Failed to fetch participant progress", err);
-        ctx?.setCurrentIndex(0);
+        console.error("Failed to fetch progress", err);
+        if (ctx) ctx.setCurrentIndex(0);
+        setProgressApplied(true);
       }
     }
 
     initProgress();
-  }, [ctx, participantId, sections.length]);
+  }, [ctx, participantId, sections.length, progressApplied]);
 
-  // Update local scores when context changes
+  // --- Update local score & streak ---
   useEffect(() => {
     if (!ctx) return;
-    setScore(ctx.pts ?? 0);
-    setStreak(ctx.streak ?? 0);
+    setScore(ctx.pts);
+    setStreak(ctx.streak);
   }, [ctx, ctx?.pts, ctx?.streak]);
 
+  const CurrentSection = sections[
+    (ctx && ctx.currentIndex) || 0
+  ] as React.ComponentType<{
+    onComplete: () => void;
+  }>;
+
+  if (!ctx) return null;
+
+  // --- Called by learning/test steps ---
+  const handleSectionComplete = () => setPhase("finish");
+
+  // --- Called by Finish screen Next button ---
+  const handleFinishNext = () => {
+    ctx.next();
+    setPhase("learning");
+  };
+
+  // --- Withdraw handler ---
   const postJson = async <T,>(url: string, body: unknown) => {
     try {
       const res = await fetch(url, {
@@ -86,19 +92,13 @@ function TestInner({ participantId }: Props) {
   const onWithdraw = async () => {
     setDbError(null);
     setDbBusy(true);
-
     const res = await postJson(`/api/withdraw`, { participantId });
     window.localStorage.clear();
     setDbBusy(false);
-
     if (!res.ok)
       setDbError(`Withdrawn locally, but server failed: ${res.error}`);
     window.location.href = "/withdrawn";
   };
-
-  if (!ctx) return null;
-
-  const CurrentSection = sections[ctx.currentIndex];
 
   return (
     <div className="h-full w-full flex flex-col p-2 md:p-6 bg-neutral-200">
@@ -113,6 +113,7 @@ function TestInner({ participantId }: Props) {
           </button>
         </div>
 
+        {/* Withdraw Popup */}
         <AnimatePresence mode="wait">
           {showWithdrawPopup && (
             <motion.div
@@ -130,13 +131,11 @@ function TestInner({ participantId }: Props) {
                 transition={{ duration: 0.25, ease: "easeOut" }}
               >
                 <h1 className="font-bold text-2xl mb-6">Confirm Withdrawal</h1>
-
                 {dbError ? (
                   <p className="text-red-500">{dbError}</p>
                 ) : (
                   <p>Do you really want to withdraw?</p>
                 )}
-
                 <div className="flex gap-4 mt-6">
                   <button
                     onClick={() => setShowWithdrawPopup(false)}
@@ -144,7 +143,6 @@ function TestInner({ participantId }: Props) {
                   >
                     Cancel
                   </button>
-
                   <button
                     onClick={onWithdraw}
                     className="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 hover:cursor-pointer"
@@ -159,38 +157,57 @@ function TestInner({ participantId }: Props) {
         </AnimatePresence>
 
         {/* Main content */}
-        <div className="flex-1 max-h-[80dvh] flex items-center justify-center">
-          <CurrentSection />
-        </div>
-
-        {/* Points + streak */}
-        {window.innerWidth > 480 && (
-          <AnimatePresence>
-            {ctx.showPtsAndStreak && (
+        <div className="flex-1 max-h-[80dvh] flex items-center justify-center w-full">
+          <AnimatePresence mode="wait">
+            {phase === "learning" && (
               <motion.div
-                key="scorebar"
-                className="flex gap-4 mt-4"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.35 }}
+                key={`section-${ctx.currentIndex}`}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.5 }}
+                className="w-full"
               >
-                <motion.div
-                  className="bg-orange-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 0.25 }}
-                >
-                  Score: {score}
-                </motion.div>
-                <motion.div
-                  className="bg-indigo-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 0.25 }}
-                >
-                  Streak: {streak}
-                </motion.div>
+                <CurrentSection onComplete={handleSectionComplete} />
               </motion.div>
             )}
+
+            {phase === "finish" && (
+              <SectionFinish
+                onComplete={handleFinishNext}
+                title="Section Complete!"
+                message="Great job completing this section."
+              />
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Score + Streak */}
+        {window.innerWidth > 480 && ctx.showPtsAndStreak && (
+          <AnimatePresence>
+            <motion.div
+              key="scorebar"
+              className="flex gap-4 mt-4"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.35 }}
+            >
+              <motion.div
+                className="bg-orange-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.25 }}
+              >
+                Score: {score}
+              </motion.div>
+              <motion.div
+                className="bg-indigo-500 text-white px-4 py-2 rounded-2xl font-semibold drop-shadow-2xl border border-black/20"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.25 }}
+              >
+                Streak: {streak}
+              </motion.div>
+            </motion.div>
           </AnimatePresence>
         )}
       </main>

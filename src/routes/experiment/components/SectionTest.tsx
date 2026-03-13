@@ -112,7 +112,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
         initial={{ opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 40 }}
-        transition={{ duration: 0.45 }}
+        transition={{ duration: 0.75 }}
       >
         {/* Question Header */}
         <div className="flex justify-between items-center">

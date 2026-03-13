@@ -15,9 +15,10 @@ export default function Section2() {
   if (!ctx) return null;
 
   function handleNext() {
+    console.log("SECTION-2 STEP NEXT CALLED", step);
     if (step === "learning") setStep("test");
     else if (step === "test") setStep("finish");
-    else ctx?.next();
+    // **do NOT call ctx.next() here for finish**
   }
 
   return (
@@ -35,7 +36,7 @@ export default function Section2() {
         <SectionFinish
           title={Section2FinishData.title}
           message={Section2FinishData.message}
-          onNext={handleNext}
+          onComplete={handleNext}
         />
       )}
     </div>

@@ -56,8 +56,9 @@ export default function ExperimentContainer() {
       <SectionFinish
         title={title}
         message={message}
-        onNext={() => {
+        onComplete={() => {
           // increment context index (moves to next section)
+          console.log("CTX NEXT CALLED:: EXPERIMENT-CONTAINER");
           ctx.next();
 
           // reset phase to learning for the new section

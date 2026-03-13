@@ -3,9 +3,9 @@ import TestContext from "../context/TestContext";
 import { AnimatePresence, motion } from "framer-motion";
 import confetti from "canvas-confetti";
 
-type Props = { title: string; message: string; onNext?: () => void };
+type Props = { title: string; message: string; onComplete?: () => void };
 
-export default function SectionFinish({ title, message, onNext }: Props) {
+export default function SectionFinish({ title, message }: Props) {
   const ctx = useContext(TestContext);
   const [nextSectionDisabled, setNextSectionDisabled] = useState(true);
   const hasFiredConfetti = useRef(false);
@@ -194,12 +194,9 @@ export default function SectionFinish({ title, message, onNext }: Props) {
         {/* Next Section Button with fix */}
         <button
           onClick={() => {
-            if (nextSectionDisabled) return; // prevent skipping
-            if (onNext) {
-              onNext(); // call parent handler
-            } else if (ctx) {
-              ctx.next(); // fallback to increment currentIndex
-            }
+            if (nextSectionDisabled) return;
+            // now increment the global index directly from here
+            ctx?.next();
           }}
           disabled={nextSectionDisabled}
           className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white transition rounded-full font-semibold shadow-sm disabled:opacity-25 disabled:cursor-not-allowed"

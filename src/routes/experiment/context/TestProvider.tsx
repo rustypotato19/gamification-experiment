@@ -102,6 +102,7 @@ export default function TestProvider({ children }: Props) {
   }
 
   const next = () => {
+    console.log("CTX NEXT CALLED AT ROOT");
     setCurrentIndex((i) => i + 1);
   };
 
