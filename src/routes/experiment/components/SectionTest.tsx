@@ -140,10 +140,10 @@ export default function SectionTest({ questions, onComplete }: Props) {
           {popup && (
             <motion.div
               key={popup.points + popup.x}
-              initial={{ opacity: 0, y: 0, scale: 0.8 }}
-              animate={{ opacity: 1, y: -60, scale: 1 }}
+              initial={{ opacity: 0, y: 0, scale: 0.7 }}
+              animate={{ opacity: 1, y: -150, scale: 0.9 }}
               exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 1.5 }}
               style={{
                 position: "absolute",
                 left: popup.x,

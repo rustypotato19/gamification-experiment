@@ -3,9 +3,9 @@ import TestContext from "../context/TestContext";
 import { AnimatePresence, motion } from "framer-motion";
 import confetti from "canvas-confetti";
 
-type Props = { title: string; message: string };
+type Props = { title: string; message: string; onNext?: () => void };
 
-export default function SectionFinish({ title, message }: Props) {
+export default function SectionFinish({ title, message, onNext }: Props) {
   const ctx = useContext(TestContext);
   const [nextSectionDisabled, setNextSectionDisabled] = useState(true);
   const hasFiredConfetti = useRef(false);
@@ -15,8 +15,11 @@ export default function SectionFinish({ title, message }: Props) {
 
   // Enable next section button after 5s
   useEffect(() => {
+    if (ctx) ctx.setShowPtsAndStreak(false);
+
     const timer = setTimeout(() => setNextSectionDisabled(false), 5000);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Pick the correct section variables based on currentIndex
@@ -151,12 +154,8 @@ export default function SectionFinish({ title, message }: Props) {
         transition={{ duration: 0.4 }}
         className="w-full max-w-2xl flex flex-col items-center text-center bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-black/20"
       >
-        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2">
-          {title}
-        </h2>
-        <p className="text-slate-500 mb-8 text-sm sm:text-base">
-          {message}
-        </p>
+        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2">{title}</h2>
+        <p className="text-slate-500 mb-8 text-sm sm:text-base">{message}</p>
 
         {/* Points Burst */}
         <motion.div
@@ -192,8 +191,16 @@ export default function SectionFinish({ title, message }: Props) {
           Accuracy: {scorePercent}%
         </div>
 
+        {/* Next Section Button with fix */}
         <button
-          onClick={ctx.next}
+          onClick={() => {
+            if (nextSectionDisabled) return; // prevent skipping
+            if (onNext) {
+              onNext(); // call parent handler
+            } else if (ctx) {
+              ctx.next(); // fallback to increment currentIndex
+            }
+          }}
           disabled={nextSectionDisabled}
           className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white transition rounded-full font-semibold shadow-sm disabled:opacity-25 disabled:cursor-not-allowed"
         >

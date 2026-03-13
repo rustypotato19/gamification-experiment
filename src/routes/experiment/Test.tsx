@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import TestProvider from "./context/TestProvider";
 import TestContext from "./context/TestContext";
-/* import { AnimatePresence, motion } from "framer-motion"; */
+import { AnimatePresence, motion } from "framer-motion";
 
 // Import config
 import { experimentSections } from "./config/experimentSections";
-import { AnimatePresence, motion } from "framer-motion";
 
 type Props = { participantId: string };
 
@@ -20,31 +19,50 @@ function TestInner({ participantId }: Props) {
 
   const sections = experimentSections;
 
+  // Fetch participant progress
   useEffect(() => {
     async function initProgress() {
-      const res = await fetch(`/api/section-progress/${participantId}`);
-      const data = await res.json();
-      if (!data.ok) return;
+      try {
+        const res = await fetch(`/api/section-progress/${participantId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
 
-      // console.log(data);
+        console.log("Fetched progress:", data);
 
-      const lastIndexMap = experimentSections
-        .map((_, i) => i * 3) // learning indices
-        .concat(sections.length - 1);
-      ctx?.setCurrentIndex(
-        lastIndexMap[data.progress.last_completed_stage] ?? 0,
-      );
+        if (!data.ok || data.progress == null) {
+          console.warn("No progress data available, defaulting to index 0");
+          ctx?.setCurrentIndex(0);
+          return;
+        }
+
+        // For simplicity, just map last_completed_stage to section index
+        // You can adjust if you have multiple stages per section
+        const lastCompletedStage = data.progress.last_completed_stage ?? 0;
+
+        const mappedIndex = Math.min(lastCompletedStage, sections.length - 1);
+
+        console.log(
+          "Mapping last_completed_stage",
+          lastCompletedStage,
+          "to currentIndex",
+          mappedIndex,
+        );
+
+        ctx?.setCurrentIndex(mappedIndex);
+      } catch (err) {
+        console.error("Failed to fetch participant progress", err);
+        ctx?.setCurrentIndex(0);
+      }
     }
+
     initProgress();
   }, [ctx, participantId, sections.length]);
 
+  // Update local scores when context changes
   useEffect(() => {
     if (!ctx) return;
-    function updateLocalScores() {
-      setScore(ctx ? ctx.pts : 0);
-      setStreak(ctx ? ctx.streak : 0);
-    }
-    updateLocalScores();
+    setScore(ctx.pts ?? 0);
+    setStreak(ctx.streak ?? 0);
   }, [ctx, ctx?.pts, ctx?.streak]);
 
   const postJson = async <T,>(url: string, body: unknown) => {
@@ -81,13 +99,6 @@ function TestInner({ participantId }: Props) {
   if (!ctx) return null;
 
   const CurrentSection = sections[ctx.currentIndex];
-
-  /* console.log(
-    "currentIndex",
-    ctx.currentIndex,
-    "CurrentSection",
-    CurrentSection.name,
-  ); */
 
   return (
     <div className="h-full w-full flex flex-col p-2 md:p-6 bg-neutral-200">

@@ -51,13 +51,13 @@ export default function TestProvider({ children }: Props) {
     setPts((x) => x + basePts * streakMultiplier);
     setStreak((s) => s + 1);
 
-    if (currentIndex <= 8) {
+    if (currentIndex <= 2) {
       // Section 1
-      if (currentIndex < 2) {
+      if (currentIndex == 0) {
         setSection1Pts((p) => p + basePts * streakMultiplier);
         setSection1Streak((s) => s + 1);
         setSection1Correct((c) => c + 1);
-      } else if (currentIndex >= 2 && currentIndex < 5) {
+      } else if (currentIndex == 1) {
         // Section 2
         setSection2Pts((p) => p + basePts * streakMultiplier);
         setSection2Streak((s) => s + 1);
@@ -73,10 +73,9 @@ export default function TestProvider({ children }: Props) {
   const addIncorrect = () => {
     setStreak(0);
 
-    if (currentIndex <= 8) {
-      if (currentIndex < 2) setSection1Incorrect((c) => c + 1);
-      else if (currentIndex >= 2 && currentIndex < 5)
-        setSection2Incorrect((c) => c + 1);
+    if (currentIndex <= 2) {
+      if (currentIndex == 0) setSection1Incorrect((c) => c + 1);
+      else if (currentIndex == 1) setSection2Incorrect((c) => c + 1);
       else setSection3Incorrect((c) => c + 1);
     }
   };

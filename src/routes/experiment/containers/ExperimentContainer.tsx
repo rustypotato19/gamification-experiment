@@ -9,32 +9,63 @@ import TestContext from "../context/TestContext";
 type Phase = "learning" | "test" | "finish";
 
 export default function ExperimentContainer() {
-  const [section, setSection] = useState(0);
   const [phase, setPhase] = useState<Phase>("learning");
-
-  const current = experimentSectionData[section];
-
   const ctx = useContext(TestContext);
   if (!ctx) return null;
 
-  if (phase === "learning")
+  const currentIndex = ctx.currentIndex;
+  const current = experimentSectionData[currentIndex];
+
+  if (!current) {
+    // All sections completed → optional final screen
+    return (
+      <div className="text-center mt-20">
+        <h2 className="text-2xl font-bold">All sections completed!</h2>
+        <p className="mt-4">Thank you for completing the experiment.</p>
+      </div>
+    );
+  }
+
+  // Learning phase
+  if (phase === "learning") {
     return (
       <SectionLearning
         slides={current.learning}
         onComplete={() => setPhase("test")}
       />
     );
+  }
 
-  if (phase === "test")
+  // Test phase
+  if (phase === "test") {
     return (
       <SectionTest
         questions={current.test}
-        onComplete={() => setPhase("finish")}
+        onComplete={() => {
+          // small delay for animation
+          setTimeout(() => setPhase("finish"), 800);
+        }}
       />
     );
+  }
 
+  // Finish phase
   const { title, message } = current.finish;
+  if (phase === "finish") {
+    return (
+      <SectionFinish
+        title={title}
+        message={message}
+        onNext={() => {
+          // increment context index (moves to next section)
+          ctx.next();
 
-  if (phase === "finish")
-    return <SectionFinish title={title} message={message} />;
+          // reset phase to learning for the new section
+          setPhase("learning");
+        }}
+      />
+    );
+  }
+
+  return null;
 }
