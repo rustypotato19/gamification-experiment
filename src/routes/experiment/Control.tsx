@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import TestContext from "../test/TestContext";
+import TestContext from "./context/TestContext";
 
 type Props = {
   participantId: string;

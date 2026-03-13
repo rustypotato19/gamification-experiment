@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Control from "./control/Control";
-import Test from "./test/Test";
+import Control from "./Control";
+import Test from "./Test";
 
 type Group = "control" | "test";
 
@@ -24,25 +24,16 @@ export default function Experiment() {
     async function fetchGroup() {
       try {
         const res = await fetch(`/api/participant-group/${participantId}`);
-
         const data = await res.json();
-
         if (!data.ok) throw new Error(data.error);
 
         const g: Group = data.group;
-
         setGroup(g);
         localStorage.setItem("participantGroup", g);
       } catch (err) {
         console.error("Failed to fetch participant group", err);
-
-        // fallback if API fails
         const stored = localStorage.getItem("participantGroup");
-        if (stored === "control" || stored === "test") {
-          setGroup(stored);
-        } else {
-          setGroup("test");
-        }
+        setGroup(stored === "control" || stored === "test" ? stored : "test");
       } finally {
         setLoading(false);
       }
@@ -51,7 +42,7 @@ export default function Experiment() {
     fetchGroup();
   }, [participantId]);
 
-  if (!participantId) {
+  if (!participantId)
     return (
       <div className="h-screen flex items-center justify-center bg-slate-50">
         <div className="bg-white p-6 rounded-2xl shadow">
@@ -59,9 +50,8 @@ export default function Experiment() {
         </div>
       </div>
     );
-  }
 
-  if (loading || !group) {
+  if (loading || !group)
     return (
       <div className="h-screen flex items-center justify-center bg-slate-50">
         <div className="bg-white p-6 rounded-2xl shadow">
@@ -69,7 +59,6 @@ export default function Experiment() {
         </div>
       </div>
     );
-  }
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-slate-50">
