@@ -4,6 +4,7 @@ import TestContext from "./context/TestContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { experimentSections } from "./config/experimentSections";
 import SectionFinish from "./components/SectionFinish";
+import { experimentSectionData } from "./config/experimentSectionData";
 
 type Props = { participantId: string };
 type Phase = "learning" | "finish";
@@ -19,7 +20,17 @@ function TestInner({ participantId }: Props) {
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
 
+  const [progressPercent, setProgressPercent] = useState(0);
+
+  const totalSteps =
+    (ctx && experimentSectionData[ctx.currentIndex].learning.length) || 0;
+
   const sections = experimentSections;
+
+  useEffect(() => {
+    if (!ctx) return;
+    setProgressPercent(ctx.getSectionProgressPercent);
+  }, [ctx]);
 
   // --- Fetch progress only ONCE ---
   useEffect(() => {
@@ -103,14 +114,37 @@ function TestInner({ participantId }: Props) {
   return (
     <div className="h-full w-full flex flex-col p-2 md:p-6 bg-neutral-200">
       <main className="flex-1 max-h-full bg-white rounded-3xl shadow-xl p-4 sm:p-8 flex flex-col items-center justify-center">
-        <div className="flex w-full h-fit justify-between items-start">
-          <p className="text-xs text-slate-500">Participant: {participantId}</p>
-          <button
-            onClick={() => setShowWithdrawPopup(true)}
-            className="px-4 py-2 bg-red-700 text-white font-bold rounded-2xl hover:bg-red-500 hover:cursor-pointer"
-          >
-            Withdraw
-          </button>
+        <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          {/* Participant ID */}
+          <p className="text-xs text-slate-500 text-center sm:text-left">
+            Participant: {participantId}
+          </p>
+
+          {/* Progress */}
+          <div className="w-full sm:max-w-md mx-auto sm:mx-0">
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-green-700"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+
+            <p className="text-xs text-gray-500 mt-1 text-center">
+              Step {ctx.sectionStep + 1} of {totalSteps}
+            </p>
+          </div>
+
+          {/* Withdraw button */}
+          <div className="flex justify-center sm:justify-end">
+            <button
+              onClick={() => setShowWithdrawPopup(true)}
+              className="px-2 py-1 text-xs sm:text-[1rem] font-semibold sm:px-4 sm:py-2 bg-red-700 text-white sm:font-bold rounded-2xl hover:bg-red-500"
+            >
+              Withdraw
+            </button>
+          </div>
         </div>
 
         {/* Withdraw Popup */}

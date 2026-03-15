@@ -26,6 +26,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
   const ctx = useContext(TestContext);
 
   const [index, setIndex] = useState(0);
+
   const question = questions[index];
 
   const [selected, setSelected] = useState<Choice | null>(null);

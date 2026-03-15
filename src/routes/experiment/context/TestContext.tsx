@@ -6,15 +6,19 @@ export type TestContextType = {
   currentIndex: number;
   showPtsAndStreak: boolean;
   pid: string;
+  sectionStep: number;
   setCurrentIndex: (index: number) => void;
   setShowPtsAndStreak: (b: boolean) => void;
   setPid: (pid: string) => void;
+  setSectionStep: (step: number) => void;
+  setSectionProgressPercent: (percent: number) => void,
   next: () => void;
   addCorrect: (multiplier?: number) => void;
   addIncorrect: () => void;
   formatNumber: (n: number) => string;
   formatTime: (n: number) => string;
   getDateNow: () => number;
+  getSectionProgressPercent: () => number;
   testMilestonesType: TestMilestonesType;
 };
 

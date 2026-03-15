@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TestContext from "./TestContext";
+import { experimentSectionData } from "../config/experimentSectionData";
 
 type Props = {
   children: React.ReactNode;
@@ -13,6 +14,8 @@ export default function TestProvider({ children }: Props) {
   const [pid, setPid] = useState<string>(
     () => localStorage.getItem("participantId") || "",
   );
+  const [sectionProgressPercent, setSectionProgressPercent] = useState(0);
+  const [sectionStep, setSectionStep] = useState<number>(0);
 
   // Section 1
   const [section1Pts, setSection1Pts] = useState(0);
@@ -120,8 +123,17 @@ export default function TestProvider({ children }: Props) {
 
   const next = () => {
     console.log("CTX NEXT CALLED AT ROOT");
+    setSectionStep(0);
     setCurrentIndex((i) => i + 1);
   };
+
+  function getSectionProgressPercent() {
+    const totalSteps = experimentSectionData[currentIndex].learning.length;
+    const percent = totalSteps > 1 ? (sectionStep+1 / totalSteps) * 100 : 100;
+    setSectionProgressPercent(percent);
+
+    return sectionProgressPercent;
+  }
 
   const testMilestonesType = {
     section1Pts,
@@ -172,15 +184,19 @@ export default function TestProvider({ children }: Props) {
         currentIndex,
         showPtsAndStreak,
         pid,
+        sectionStep,
         setCurrentIndex,
         setShowPtsAndStreak,
         setPid,
+        setSectionStep,
+        setSectionProgressPercent,
         next,
         addCorrect,
         addIncorrect,
         formatNumber,
         formatTime,
         getDateNow,
+        getSectionProgressPercent,
         testMilestonesType,
       }}
     >

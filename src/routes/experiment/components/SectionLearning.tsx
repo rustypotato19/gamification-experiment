@@ -27,8 +27,10 @@ export default function SectionLearning({ slides, onComplete }: Props) {
   function next() {
     nextToggleBusy();
     setTimeout(() => {
-      if (index < slides.length - 1) setIndex((i) => i + 1);
-      else onComplete();
+      if (index < slides.length - 1) {
+        setIndex((i) => i + 1);
+        ctx?.setSectionStep(ctx.sectionStep + 1);
+      } else onComplete();
     }, 200);
 
     // Start time debug
@@ -77,10 +79,7 @@ export default function SectionLearning({ slides, onComplete }: Props) {
         exit={{ opacity: 0, x: 100 }}
         transition={{ duration: 1, ease: "easeInOut" }}
       >
-        <div className="flex items-start justify-between">
-          <h2 className="text-xl font-semibold">{slide.title}</h2>
-          <p>{`${index+1}/${slides.length}`}</p>
-        </div>
+        <h2 className="text-xl font-semibold">{slide.title}</h2>
 
         <p>{slide.text}</p>
 
