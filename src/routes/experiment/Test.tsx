@@ -121,26 +121,29 @@ function TestInner({ participantId }: Props) {
           </p>
 
           {/* Progress */}
-          <div className="w-full sm:max-w-md mx-auto sm:mx-0">
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-green-700"
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
 
-            <p className="text-xs text-gray-500 mt-1 text-center">
-              Step {ctx.sectionStep + 1} of {totalSteps}
-            </p>
-          </div>
+          {ctx.showSectionProgressPercent && (
+            <div className="w-full sm:max-w-md mx-auto sm:mx-0">
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-green-700"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+
+              <p className="text-xs text-gray-500 mt-1 text-center">
+                Step {ctx.sectionStep + 1} of {totalSteps}
+              </p>
+            </div>
+          )}
 
           {/* Withdraw button */}
           <div className="flex justify-center sm:justify-end">
             <button
               onClick={() => setShowWithdrawPopup(true)}
-              className="px-2 py-1 text-xs sm:text-[1rem] font-semibold sm:px-4 sm:py-2 bg-red-700 text-white sm:font-bold rounded-2xl hover:bg-red-500"
+              className="px-2 py-1 text-xs sm:text-[1rem] font-semibold sm:px-4 sm:py-2 bg-red-700 text-white sm:font-bold rounded-2xl hover:bg-red-500 hover:cursor-pointer z-50"
             >
               Withdraw
             </button>

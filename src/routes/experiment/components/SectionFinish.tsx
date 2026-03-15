@@ -15,7 +15,10 @@ export default function SectionFinish({ title, message }: Props) {
 
   // Enable next section button after 5s
   useEffect(() => {
-    if (ctx) ctx.setShowPtsAndStreak(false);
+    if (ctx) {
+      ctx.setShowPtsAndStreak(false);
+      ctx.setShowSectionProgressPercent(false);
+    }
 
     const timer = setTimeout(() => setNextSectionDisabled(false), 5000);
     return () => clearTimeout(timer);

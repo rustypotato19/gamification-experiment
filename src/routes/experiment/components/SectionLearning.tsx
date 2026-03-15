@@ -43,6 +43,7 @@ export default function SectionLearning({ slides, onComplete }: Props) {
   useEffect(() => {
     if (!ctx) return;
     ctx.setShowPtsAndStreak(false);
+    ctx.setShowSectionProgressPercent(true);
 
     switch (ctx.currentIndex) {
       case 0:

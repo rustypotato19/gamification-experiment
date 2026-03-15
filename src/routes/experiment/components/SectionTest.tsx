@@ -42,6 +42,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
   useEffect(() => {
     if (!ctx) return;
     ctx.setShowPtsAndStreak(true);
+    ctx.setShowSectionProgressPercent(false);
   }, [ctx]);
 
   if (!ctx) return null;
