@@ -63,7 +63,7 @@ export const Section3TestData: Question[] = [
     options: {
       a: "Always",
       b: "Never",
-      c: "For simple tasks",
+      c: "As the first option",
     },
 
     correct: "c",

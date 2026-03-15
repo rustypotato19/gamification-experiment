@@ -51,32 +51,49 @@ export default function TestProvider({ children }: Props) {
     setPts((x) => x + basePts * streakMultiplier);
     setStreak((s) => s + 1);
 
-    if (currentIndex <= 2) {
-      // Section 1
-      if (currentIndex == 0) {
+    switch (currentIndex) {
+      case 0:
         setSection1Pts((p) => p + basePts * streakMultiplier);
         setSection1Streak((s) => s + 1);
         setSection1Correct((c) => c + 1);
-      } else if (currentIndex == 1) {
-        // Section 2
+        break;
+      case 1:
         setSection2Pts((p) => p + basePts * streakMultiplier);
         setSection2Streak((s) => s + 1);
         setSection2Correct((c) => c + 1);
-      } else {
+        break;
+      case 2:
         setSection3Pts((p) => p + basePts * streakMultiplier);
         setSection3Streak((s) => s + 1);
         setSection3Correct((c) => c + 1);
-      }
+        break;
+      default:
+        console.log(`Some Error occurred\nIndex:: ${currentIndex}`);
+        break;
     }
   };
 
   const addIncorrect = () => {
     setStreak(0);
 
-    if (currentIndex <= 2) {
-      if (currentIndex == 0) setSection1Incorrect((c) => c + 1);
-      else if (currentIndex == 1) setSection2Incorrect((c) => c + 1);
-      else setSection3Incorrect((c) => c + 1);
+    switch (currentIndex) {
+      case 0:
+        setSection1Incorrect((c) => c + 1);
+        setSection1Streak(0);
+        break;
+      case 1:
+        setSection2Incorrect((c) => c + 1);
+        setSection2Streak(0);
+        break;
+      case 2:
+        setSection3Incorrect((c) => c + 1);
+        setSection3Streak(0);
+        break;
+      default:
+        console.log(
+          `Invalid Index: Can't add incorrect score:: ${currentIndex}`,
+        );
+        break;
     }
   };
 

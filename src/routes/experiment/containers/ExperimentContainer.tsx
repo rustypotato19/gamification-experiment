@@ -43,7 +43,7 @@ export default function ExperimentContainer() {
         questions={current.test}
         onComplete={() => {
           // small delay for animation
-          setTimeout(() => setPhase("finish"), 800);
+          setTimeout(() => setPhase("finish"), 1000);
         }}
       />
     );

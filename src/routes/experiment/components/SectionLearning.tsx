@@ -30,18 +30,37 @@ export default function SectionLearning({ slides, onComplete }: Props) {
       if (index < slides.length - 1) setIndex((i) => i + 1);
       else onComplete();
     }, 200);
+
+    // Start time debug
+    /* if (!ctx) return;
+    console.log(
+      `Index: ${ctx.currentIndex}:: Section ${ctx.currentIndex + 1}:: Start Time:: ${ctx.currentIndex == 0 ? ctx.testMilestonesType.section1StartTime : ctx.currentIndex == 1 ? ctx.testMilestonesType.section2StartTime : ctx.testMilestonesType.section3StartTime}`,
+    ); */
   }
 
   useEffect(() => {
     if (!ctx) return;
     ctx.setShowPtsAndStreak(false);
 
-    if (ctx.currentIndex == 0)
-      ctx.testMilestonesType.setSection1StartTime(ctx.getDateNow());
-    else if (ctx.currentIndex == 1)
-      ctx.testMilestonesType.setSection2StartTime(ctx.getDateNow());
-    else if (ctx.currentIndex == 2)
-      ctx.testMilestonesType.setSection3StartTime(ctx.getDateNow());
+    switch (ctx.currentIndex) {
+      case 0:
+        ctx.testMilestonesType.setSection1StartTime(Date.now());
+        break;
+      case 1:
+        ctx.testMilestonesType.setSection2StartTime(Date.now());
+        break;
+      case 2:
+        ctx.testMilestonesType.setSection3StartTime(Date.now());
+        break;
+      default:
+        console.log(`Some Error occurred\nIndex:: ${ctx.currentIndex}`);
+        break;
+    }
+
+    // Start time debug
+    /* console.log(
+      `Index: ${ctx.currentIndex}:: Section ${ctx.currentIndex + 1}:: Start Time:: ${ctx.currentIndex == 0 ? ctx.testMilestonesType.section1StartTime : ctx.currentIndex == 1 ? ctx.testMilestonesType.section2StartTime : ctx.testMilestonesType.section3StartTime}`,
+    ); */
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,7 +77,10 @@ export default function SectionLearning({ slides, onComplete }: Props) {
         exit={{ opacity: 0, x: 100 }}
         transition={{ duration: 1, ease: "easeInOut" }}
       >
-        <h2 className="text-xl font-semibold">{slide.title}</h2>
+        <div className="flex items-start justify-between">
+          <h2 className="text-xl font-semibold">{slide.title}</h2>
+          <p>{`${index+1}/${slides.length}`}</p>
+        </div>
 
         <p>{slide.text}</p>
 

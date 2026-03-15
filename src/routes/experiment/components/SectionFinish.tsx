@@ -22,50 +22,41 @@ export default function SectionFinish({ title, message }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Pick the correct section variables based on currentIndex
-  const sectionPts =
-    currentIndex === 0
-      ? (tm && tm.section1Pts) || 0
-      : currentIndex === 1
-        ? ((tm && tm.section2Pts) || 0) - ((tm && tm.section1Pts) || 0)
-        : ((tm && tm.section3Pts) || 0) - ((tm && tm.section2Pts) || 0);
+  const ptsMap = [tm?.section1Pts, tm?.section2Pts, tm?.section3Pts];
 
-  const sectionStreak =
-    currentIndex === 0
-      ? (tm && tm.section1Streak) || 0
-      : currentIndex === 1
-        ? ((tm && tm.section2Streak) || 0) - ((tm && tm.section1Streak) || 0)
-        : ((tm && tm.section3Streak) || 0) - ((tm && tm.section2Streak) || 0);
+  const streakMap = [
+    tm?.section1Streak,
+    tm?.section2Streak,
+    tm?.section3Streak,
+  ];
+  const correctMap = [
+    tm?.section1Correct,
+    tm?.section2Correct,
+    tm?.section3Correct,
+  ];
+  const incorrectMap = [
+    tm?.section1Incorrect,
+    tm?.section2Incorrect,
+    tm?.section3Incorrect,
+  ];
+  const startTimeMap = [
+    tm?.section1StartTime,
+    tm?.section2StartTime,
+    tm?.section3StartTime,
+  ];
+  const endTimeMap = [
+    tm?.section1EndTime,
+    tm?.section2EndTime,
+    tm?.section3EndTime,
+  ];
 
-  const sectionCorrect =
-    currentIndex === 0
-      ? (tm && tm.section1Correct) || 0
-      : currentIndex === 1
-        ? ((tm && tm.section2Correct) || 0) - ((tm && tm.section1Correct) || 0)
-        : ((tm && tm.section3Correct) || 0) - ((tm && tm.section2Correct) || 0);
+  const sectionPts = ptsMap[currentIndex] ?? 0;
+  const sectionStreak = streakMap[currentIndex] ?? 0;
+  const sectionCorrect = correctMap[currentIndex] ?? 0;
+  const sectionIncorrect = incorrectMap[currentIndex] ?? 0;
 
-  const sectionIncorrect =
-    currentIndex === 0
-      ? (tm && tm.section1Incorrect) || 0
-      : currentIndex === 1
-        ? ((tm && tm.section2Incorrect) || 0) -
-          ((tm && tm.section1Incorrect) || 0)
-        : ((tm && tm.section3Incorrect) || 0) -
-          ((tm && tm.section2Incorrect) || 0);
-
-  const sectionStartTime =
-    currentIndex === 0
-      ? (tm && tm.section1StartTime) || 0
-      : currentIndex === 1
-        ? (tm && tm.section2StartTime) || 0
-        : (tm && tm.section3StartTime) || 0;
-
-  const sectionEndTime =
-    currentIndex === 0
-      ? (tm && tm.section1EndTime) || 0
-      : currentIndex === 1
-        ? (tm && tm.section2EndTime) || 0
-        : (tm && tm.section3EndTime) || 0;
+  const sectionStartTime = startTimeMap[currentIndex] ?? 0;
+  const sectionEndTime = endTimeMap[currentIndex] ?? 0;
 
   const total = sectionCorrect + sectionIncorrect;
   const scorePercent =
@@ -96,18 +87,25 @@ export default function SectionFinish({ title, message }: Props) {
 
   // Record section end time if null
   useEffect(() => {
-    const now = (ctx && ctx.getDateNow()) || 0;
+    if (!tm) return;
+    const now = Date.now();
 
-    if (currentIndex === 0 && tm && tm.section1EndTime === null) {
-      tm.setSection1EndTime(now);
+    switch (currentIndex) {
+      case 0:
+        ctx.testMilestonesType.setSection1EndTime(now);
+        break;
+      case 1:
+        ctx.testMilestonesType.setSection2EndTime(now);
+        break;
+      case 2:
+        ctx.testMilestonesType.setSection3EndTime(now);
+        break;
+      default:
+        console.log(`Some Error occurred\nIndex:: ${currentIndex}`);
+        break;
     }
-    if (currentIndex === 1 && tm && tm.section2EndTime === null) {
-      tm.setSection2EndTime(now);
-    }
-    if (currentIndex === 2 && tm && tm.section3EndTime === null) {
-      tm.setSection3EndTime(now);
-    }
-  }, [currentIndex, tm, ctx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const rawTimeTaken = sectionEndTime - sectionStartTime;
   const timeTaken = (ctx && ctx.formatTime(rawTimeTaken)) || 0;
@@ -151,7 +149,8 @@ export default function SectionFinish({ title, message }: Props) {
         key={currentIndex}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.7 }}
         className="w-full max-w-2xl flex flex-col items-center text-center bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-black/20"
       >
         <h2 className="text-xl sm:text-3xl font-bold sm:mb-2">{title}</h2>
@@ -199,7 +198,7 @@ export default function SectionFinish({ title, message }: Props) {
             ctx?.next();
           }}
           disabled={nextSectionDisabled}
-          className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white transition rounded-full font-semibold shadow-sm disabled:opacity-25 disabled:cursor-not-allowed"
+          className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white transition rounded-full font-semibold shadow-sm hover:cursor-pointer disabled:opacity-25 disabled:bg-white disabled:text-black disabled:cursor-not-allowed"
         >
           Next Section
         </button>
