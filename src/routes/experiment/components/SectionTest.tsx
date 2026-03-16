@@ -113,11 +113,11 @@ export default function SectionTest({ questions, onComplete }: Props) {
         relative
         bg-white
         w-full
-        max-w-[80dvw]
-        sm:max-w-[40dvw]
+        max-w-[80vw]
+        sm:max-w-[40vw]
         mx-auto
-        max-h-[70dvh]
-        sm:max-h-[60dvh]
+        max-h-[70vh]
+        sm:max-h-[60vh]
         p-4 sm:p-6
         rounded-xl sm:rounded-2xl
         drop-shadow-lg

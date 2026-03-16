@@ -73,7 +73,7 @@ export default function SectionLearning({ slides, onComplete }: Props) {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="bg-white max-w-[50dvh] sm:max-w-xl w-full max-h-[60dvh] overflow-y-scroll sm:overflow-auto p-3 sm:p-6 rounded-lg sm:rounded-2xl drop-shadow-lg border border-black/20 flex flex-col gap-4"
+        className="bg-white max-w-[50vh] sm:max-w-xl w-full max-h-[60vh] overflow-y-scroll sm:overflow-auto p-3 sm:p-6 rounded-lg sm:rounded-2xl drop-shadow-lg border border-black/20 flex flex-col gap-4"
         key={index}
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}

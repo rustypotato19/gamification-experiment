@@ -195,7 +195,7 @@ function TestInner({ participantId }: Props) {
         </AnimatePresence>
 
         {/* Main content */}
-        <div className="flex-1 max-h-[80dvh] flex items-center justify-center w-full">
+        <div className="flex-1 max-h-[80vh] flex items-center justify-center w-full">
           <AnimatePresence mode="wait">
             {phase === "learning" && (
               <motion.div
