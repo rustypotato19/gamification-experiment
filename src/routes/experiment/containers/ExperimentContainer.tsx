@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import SectionLearning from "../components/SectionLearning";
 import SectionTest from "../components/SectionTest";
@@ -10,63 +10,68 @@ type Phase = "learning" | "test" | "finish";
 
 export default function ExperimentContainer() {
   const [phase, setPhase] = useState<Phase>("learning");
-  const ctx = useContext(TestContext);
-  if (!ctx) return null;
 
-  const currentIndex = ctx.currentIndex;
+  const ctx = useContext(TestContext);
+
+  const currentIndex = ctx?.currentIndex ?? 0;
   const current = experimentSectionData[currentIndex] || null;
 
-  if (!current) {
-    // All sections completed → optional final screen
-    return (
-      <div className="text-center mt-20">
-        <h2 className="text-2xl font-bold">All sections completed!</h2>
-        <p className="mt-4">Thank you for completing the experiment.</p>
-      </div>
-    );
-  }
+  // Ensure phase resets when moving to a new section
+  useEffect(() => {
+    function setLearningPhase() {
+      setPhase("learning");
+    }
+    setLearningPhase();
+  }, [currentIndex]);
 
-  // Learning phase
-  if (phase === "learning") {
-    return (
-      <SectionLearning
-        slides={current.learning}
-        onComplete={() => setPhase("test")}
-      />
-    );
-  }
+  if (!ctx) return null;
 
-  // Test phase
-  if (phase === "test") {
-    return (
-      <SectionTest
-        questions={current.test}
-        onComplete={() => {
-          // small delay for animation
-          setTimeout(() => setPhase("finish"), 1000);
-        }}
-      />
-    );
-  }
+  return (
+    <div
+      className="
+      min-h-full
+      w-full
+      flex
+      items-center
+      justify-center
+      px-4
+      py-6
+      sm:px-6
+      bg-white
+    "
+    >
+      {!current ? (
+        <div className="text-center max-w-xl">
+          <h2 className="text-2xl font-bold">All sections completed!</h2>
+          <p className="mt-4 text-slate-600">
+            Thank you for completing the experiment.
+          </p>
+        </div>
+      ) : phase === "learning" ? (
+        <SectionLearning
+          slides={current.learning}
+          onComplete={() => setPhase("test")}
+        />
+      ) : phase === "test" ? (
+        <SectionTest
+          questions={current.test}
+          onComplete={() => {
+            setTimeout(() => setPhase("finish"), 900);
+          }}
+        />
+      ) : (
+        <SectionFinish
+          title={current.finish.title}
+          message={current.finish.message}
+          onComplete={() => {
+            console.log("CTX NEXT CALLED:: EXPERIMENT-CONTAINER");
 
-  // Finish phase
-  const { title, message } = current.finish;
-  if (phase === "finish") {
-    return (
-      <SectionFinish
-        title={title}
-        message={message}
-        onComplete={() => {
-          // increment context index (moves to next section)
-          console.log("CTX NEXT CALLED:: EXPERIMENT-CONTAINER");
-          ctx.next();
+            ctx.next();
 
-          // reset phase to learning for the new section
-          setPhase("learning");
-        }}
-      />
-    );
-  }
-
-  return null;
+            setPhase("learning");
+          }}
+        />
+      )}
+    </div>
+  );
 }

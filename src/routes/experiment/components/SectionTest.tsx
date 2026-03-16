@@ -26,9 +26,6 @@ export default function SectionTest({ questions, onComplete }: Props) {
   const ctx = useContext(TestContext);
 
   const [index, setIndex] = useState(0);
-
-  const question = questions[index];
-
   const [selected, setSelected] = useState<Choice | null>(null);
 
   const [popup, setPopup] = useState<{
@@ -39,6 +36,8 @@ export default function SectionTest({ questions, onComplete }: Props) {
   } | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const question = questions[index];
 
   useEffect(() => {
     if (!ctx) return;
@@ -53,13 +52,11 @@ export default function SectionTest({ questions, onComplete }: Props) {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) {
     if (selected) return;
-    if (!ctx) return null;
 
     const correct = choice === question.correct;
-
     let gained = 0;
 
-    if (correct) {
+    if (ctx && correct) {
       const basePts = 100;
       const streakMultiplier = 1 + ctx.streak * 0.2;
 
@@ -77,7 +74,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
         });
       }
     } else {
-      ctx.addIncorrect();
+      ctx?.addIncorrect();
 
       const rect = containerRef.current?.getBoundingClientRect();
 
@@ -109,39 +106,40 @@ export default function SectionTest({ questions, onComplete }: Props) {
       <motion.div
         ref={containerRef}
         key={index}
-        className="
-        relative
-        bg-white
-        w-full
-        max-w-[80vw]
-        sm:max-w-[40vw]
-        mx-auto
-        max-h-[70vh]
-        sm:max-h-[60vh]
-        p-4 sm:p-6
-        rounded-xl sm:rounded-2xl
-        drop-shadow-lg
-        border border-black/20
-        flex flex-col
-        gap-4
-      "
         initial={{ opacity: 0, x: -40 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 40 }}
-        transition={{ duration: 0.75 }}
+        transition={{ duration: 0.6 }}
+        className="
+        relative
+        w-full
+        max-w-170
+        min-w-0
+        mx-auto
+        max-h-[75vh]
+        overflow-y-auto
+        bg-white
+        px-4 sm:px-6
+        py-5 sm:py-6
+        rounded-xl sm:rounded-2xl
+        shadow-lg
+        border border-black/10
+        flex flex-col
+        gap-4
+      "
       >
-        {/* Question Header */}
+        {/* Header */}
         <div className="flex justify-between items-center">
           <h2 className="font-semibold text-sm sm:text-lg">
             Question {index + 1} / {questions.length}
           </h2>
 
           <div className="text-sm sm:text-base font-semibold text-orange-500">
-            <span className="animate-pulse duration-75">🔥</span> {ctx.streak}
+            🔥 {ctx.streak}
           </div>
         </div>
 
-        <p className="text-sm sm:text-base leading-relaxed">
+        <p className="text-sm sm:text-base leading-relaxed text-slate-700">
           {question.prompt}
         </p>
 
@@ -151,34 +149,29 @@ export default function SectionTest({ questions, onComplete }: Props) {
           </div>
         )}
 
-        {/* Floating Points Popup */}
+        {/* Positive Popup */}
         <AnimatePresence>
           {popup?.points && (
             <motion.div
               key={popup.points + popup.x}
               initial={{ opacity: 0, y: 0, scale: 0.7 }}
-              animate={{ opacity: 1, y: -150, scale: 0.9 }}
+              animate={{ opacity: 1, y: -140, scale: 0.9 }}
               exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 1.5 }}
-              style={{
-                position: "absolute",
-                left: popup.x,
-                top: popup.y,
-              }}
+              transition={{ duration: 1.3 }}
+              style={{ left: popup.x, top: popup.y }}
               className="
+                absolute
                 pointer-events-none
                 -translate-x-1/2
                 -translate-y-1/2
-                px-6
-                py-2
+                px-5 py-2
                 rounded-full
                 backdrop-blur-md
-                bg-white/50
-                border
-                border-emerald-300
+                bg-white/60
+                border border-emerald-300
                 text-emerald-600
                 font-extrabold
-                text-xl sm:text-2xl
+                text-lg sm:text-2xl
                 shadow-lg
                 select-none
               "
@@ -188,39 +181,34 @@ export default function SectionTest({ questions, onComplete }: Props) {
           )}
         </AnimatePresence>
 
-        {/* Floating Negative Popup */}
+        {/* Negative Popup */}
         <AnimatePresence>
           {popup?.streak && (
             <motion.div
               key={popup.x}
               initial={{ opacity: 0, y: 0, scale: 0.7 }}
-              animate={{ opacity: 1, y: -150, scale: 0.9 }}
+              animate={{ opacity: 1, y: -140, scale: 0.9 }}
               exit={{ opacity: 0, y: -100 }}
-              transition={{ duration: 1.5 }}
-              style={{
-                position: "absolute",
-                left: popup.x,
-                top: popup.y,
-              }}
+              transition={{ duration: 1.3 }}
+              style={{ left: popup.x, top: popup.y }}
               className="
+                absolute
                 pointer-events-none
                 -translate-x-1/2
                 -translate-y-1/2
-                px-6
-                py-2
+                px-5 py-2
                 rounded-full
                 backdrop-blur-md
-                bg-white/50
-                border
-                border-red-300
+                bg-white/60
+                border border-red-300
                 text-red-600
                 font-extrabold
-                text-xl sm:text-2xl
+                text-lg sm:text-2xl
                 shadow-lg
                 select-none
               "
             >
-              {ctx.streak != 0 ? "Streak Lost!" : "Incorrect!"}
+              {ctx.streak !== 0 ? "Streak Lost!" : "Incorrect!"}
             </motion.div>
           )}
         </AnimatePresence>
@@ -229,7 +217,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
         <div className="flex flex-col gap-2">
           {(["a", "b", "c"] as Choice[]).map((choice) => {
             let style = `
-              p-2
+              px-3 py-2
               rounded-xl
               ring-1
               text-sm sm:text-base
@@ -237,9 +225,10 @@ export default function SectionTest({ questions, onComplete }: Props) {
               transition
               active:scale-[0.97]
               select-none
+              min-w-0
             `;
 
-            if (!selected) style += " hover:bg-neutral-200";
+            if (!selected) style += " hover:bg-neutral-100";
 
             if (selected) {
               if (choice === question.correct) {

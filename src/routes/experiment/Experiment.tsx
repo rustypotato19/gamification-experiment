@@ -14,10 +14,12 @@ export default function Experiment() {
   const [group, setGroup] = useState<Group | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Mark study stage
   useEffect(() => {
     localStorage.setItem("studyStage", "experiment");
   }, []);
 
+  // Fetch participant group
   useEffect(() => {
     if (!participantId) return;
 
@@ -42,26 +44,29 @@ export default function Experiment() {
     fetchGroup();
   }, [participantId]);
 
+  // --- Missing participant ID ---
   if (!participantId)
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-50">
-        <div className="bg-white p-6 rounded-2xl shadow">
+      <div className="h-screen w-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white p-8 rounded-3xl shadow-lg text-center text-slate-700 font-medium">
           Missing participant ID.
         </div>
       </div>
     );
 
+  // --- Loading state ---
   if (loading || !group)
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-50">
-        <div className="bg-white p-6 rounded-2xl shadow">
+      <div className="h-screen w-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white p-8 rounded-3xl shadow-lg text-center text-slate-700 font-medium">
           Loading experiment...
         </div>
       </div>
     );
 
+  // --- Main experiment view ---
   return (
-    <div className="h-screen w-screen overflow-hidden bg-slate-50">
+    <div className="h-screen w-screen overflow-hidden bg-white flex flex-col">
       {group === "control" ? (
         <Control participantId={participantId} />
       ) : (

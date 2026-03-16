@@ -3,41 +3,42 @@ import type { Step } from "../../types";
 export const Section1LearningData: Step[] = [
   {
     title: (
-      <div className="flex flex-col gap-4">
-        <span className="text-md sm:text-2xl">Section 1 of 3</span>
-        <span className="text-sm sm:text-2xl">
+      <div className="flex flex-col gap-2 sm:gap-4 text-center sm:text-left">
+        <span className="text-lg sm:text-2xl font-semibold">
+          Section 1 of 3
+        </span>
+        <span className="text-sm sm:text-xl text-slate-700">
           What is AI? And how does it affect the environment?
         </span>
       </div>
     ),
-
     text: (
-      <div className="flex flex-col sm:flex-row justify-center items-center">
-        <p className="text-sm sm:text-lg mt-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mt-4">
+        <p className="text-sm sm:text-lg max-w-md sm:max-w-xl text-center sm:text-left">
           In this section, you'll be introduced to "<b>AI</b>", its general
-          impacts on the environment and why these impacts are so difficult to
-          see.
+          impacts on the environment and why these impacts are often invisible.
         </p>
-
-        <img src="/images/ai-robot.png" className="h-30 sm:h-40 mt-6 sm:mt-0" />
+        <img
+          src="/images/ai-robot.png"
+          alt="AI robot illustration"
+          className="w-full max-w-xs sm:max-w-sm h-auto rounded-lg shadow-md"
+        />
       </div>
     ),
   },
 
   {
     title: 'What actually is "AI"?',
-
     text: (
-      <div className="flex flex-col justify-center items-center gap-2">
-        <p>
-          <b>AI</b> is a scary term, but what we've come to know as AI - from
-          the likes of ChatGPT or Gemini - are actually{" "}
-          <b>Large Language Models</b>.
+      <div className="flex flex-col items-center gap-4">
+        <p className="text-sm sm:text-base max-w-lg text-center">
+          <b>AI</b> is a scary term, but most AI systems like ChatGPT or Gemini
+          are actually <b>Large Language Models (LLMs)</b>.
         </p>
-
         <img
           src="/images/different-languages.jpg"
-          className="max-h-30 sm:max-h-40 w-80"
+          alt="Different languages"
+          className="w-full max-w-xs sm:max-w-md rounded-lg shadow-md"
         />
       </div>
     ),
@@ -45,27 +46,24 @@ export const Section1LearningData: Step[] = [
 
   {
     title: "LLMs",
-
     text: (
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center gap-4 text-center sm:text-left">
         <p>
-          LLMs <i>scan millions of text files</i>, then based on those they use
-          maths to determine which word should come next.
+          LLMs <i>scan millions of text files</i> and calculate what word should
+          come next.
         </p>
-
         <img
           src="/gifs/hackerScreen.gif"
-          className="w-full h-30 rounded-2xl drop-shadow-xl border"
+          alt="LLM processing"
+          className="w-full max-w-xs sm:max-w-md rounded-2xl shadow-lg"
         />
-
         <p>
-          LLMs don't <b>understand</b>, they calculate what the most
-          statistically appropriate response is.
+          They don’t understand—they calculate statistical probabilities for
+          responses.
         </p>
-
         <p>
-          Modern day LLMs can have their behaviour manually altered during the
-          training process, but this is complicated.
+          Modern LLMs can be manually tuned during training, but it’s
+          complicated.
         </p>
       </div>
     ),
@@ -73,21 +71,16 @@ export const Section1LearningData: Step[] = [
 
   {
     title: "Why does this matter?",
-
     text: (
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center gap-4 text-center">
         <p>
           Training AI models is <b>extremely intensive</b>.
         </p>
-
         <p>
-          They can require <i>millions of hours</i> of simulations requiring
-          <span className="text-md mx-2 italic applyElectricFont animate-grow-once">
-            huge
-          </span>
-          amounts of processing power.
+          Requires <i>millions of simulation hours</i> and
+          <span className="mx-1 italic font-bold applyElectricFont animate-grow-once">huge</span>{" "}
+          processing power.
         </p>
-
         <p>
           <b>This is where the problems start.</b>
         </p>
@@ -97,50 +90,36 @@ export const Section1LearningData: Step[] = [
 
   {
     title: "Data Centers",
-
     text: (
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center gap-4 text-center sm:text-left">
         <p>Massive data centers are used to train LLM models.</p>
-
         <img
           src="/images/server-rack.jpg"
           alt="Data center racks"
-          className="h-full max-w-60 sm:max-w-90 rounded-2xl drop-shadow-xl border"
+          className="w-full max-w-xs sm:max-w-md rounded-2xl shadow-lg"
         />
-
-        <p>
-          These can house thousands of <b>CPUs</b>, <b>GPUs</b> and terabytes of{" "}
-          <b>RAM</b>.
-        </p>
-
-        <p>Running these requires a lot of resources.</p>
+        <p>Thousands of CPUs, GPUs, and terabytes of RAM are used.</p>
+        <p>Running these centers consumes a huge amount of energy.</p>
       </div>
     ),
   },
 
   {
     title: "Data Centers II",
-
     text: (
-      <div className="flex flex-col items-center justify-center gap-2 sm:gap-3">
+      <div className="flex flex-col items-center gap-4 text-center sm:text-left">
         <p>
-          Large quantities of water and electricity are required in the training
-          of LLMs — resulting in the production of <b>Carbon Dioxide (CO₂)</b>.
+          Training LLMs requires lots of water and electricity, producing
+          significant <b>CO₂</b>.
         </p>
-
         <img
           src="/images/data-center-co2.png"
-          className="max-w-60 sm:max-w-90"
+          alt="Data center CO2 emissions"
+          className="w-full max-w-xs sm:max-w-md rounded-lg shadow-md"
         />
-
+        <p>Most electricity still comes from fossil fuels.</p>
         <p>
-          A majority of the world's <b>electricity</b> is still generated by
-          burning fossil fuels like <b>oil</b> and <b>coal</b>.
-        </p>
-
-        <p>
-          <b>Water</b> is pumped into data centres to cool servers — which also
-          requires electricity.
+          Water is pumped into servers for cooling, which also uses electricity.
         </p>
       </div>
     ),
@@ -148,23 +127,19 @@ export const Section1LearningData: Step[] = [
 
   {
     title: "Invisible Impact",
-
     text: (
-      <div className="flex flex-col items-center justify-center gap-3">
-        <p>This is what makes the impact of AI difficult to see.</p>
-
-        <p>
-          It's hidden behind a mask of <i>utility and convenience</i>.
-        </p>
-
-        <img src="/images/eye.jpg" className="max-w-40" />
-
-        <p>This is why education on this topic is important.</p>
-
-        <p className="font-semibold">For now, time for a quiz.</p>
+      <div className="flex flex-col items-center gap-4 text-center">
+        <p>This is why the environmental impact of AI is hard to see.</p>
+        <p>Hidden behind utility and convenience.</p>
+        <img
+          src="/images/eye.jpg"
+          alt="Invisible impact"
+          className="w-32 sm:w-48 rounded-lg shadow-md"
+        />
+        <p>Education on this topic is important.</p>
+        <p className="font-semibold">Time for a quiz!</p>
       </div>
     ),
-
     isFinal: true,
   },
 ];

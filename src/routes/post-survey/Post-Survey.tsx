@@ -77,11 +77,7 @@ const POST_QUESTIONS: Question[] = [
     id: 1,
     prompt:
       "Which resource do data centres primarily consume when running large AI models?",
-    options: {
-      a: "Water",
-      b: "Electricity",
-      c: "Rare earth metals",
-    },
+    options: { a: "Water", b: "Electricity", c: "Rare earth metals" },
   },
   {
     id: 2,
@@ -157,11 +153,7 @@ const POST_QUESTIONS: Question[] = [
     id: 9,
     prompt:
       "Approximately how much CO₂ is produced by a single AI chatbot query on average?",
-    options: {
-      a: "1.5 grams",
-      b: "0.1 grams",
-      c: "5 grams",
-    },
+    options: { a: "1.5 grams", b: "0.1 grams", c: "5 grams" },
   },
   {
     id: 10,
@@ -187,11 +179,7 @@ const POST_QUESTIONS: Question[] = [
     id: 12,
     prompt:
       "Which energy source can significantly reduce the carbon footprint of AI infrastructure?",
-    options: {
-      a: "Coal",
-      b: "Natural gas",
-      c: "Renewable energy",
-    },
+    options: { a: "Coal", b: "Natural gas", c: "Renewable energy" },
   },
   {
     id: 13,
@@ -237,6 +225,8 @@ export default function PostSurvey() {
     message: string;
   } | null>(null);
   const [touched, setTouched] = useState(false);
+  const [showScorePopup, setShowScorePopup] = useState(false);
+  const [scorePopupDismissed, setScorePopupDismissed] = useState(false);
 
   const allAnswered = useMemo(
     () => answers.every((a) => a !== null),
@@ -244,25 +234,17 @@ export default function PostSurvey() {
   );
   const score = useMemo(() => computeScore(answers), [answers]);
 
-  const [showScorePopup, setShowScorePopup] = useState(false);
-  const [scorePopupDismissed, setScorePopupDismissed] = useState(false);
-
   const setAnswer = (idx: number, value: Choice) => {
     setAnswers((prev) => {
       const next = [...prev];
       next[idx] = value;
-
-      // If this click completes the survey, show the popup (unless dismissed)
-      const nowAllAnswered = next.every((a) => a !== null);
-      if (nowAllAnswered && !scorePopupDismissed) {
+      if (next.every((a) => a !== null) && !scorePopupDismissed)
         setShowScorePopup(true);
-      }
-
       return next;
     });
   };
 
-  const correctFor = (questionIndex: number) => ANSWER_KEY[questionIndex];
+  const correctFor = (idx: number) => ANSWER_KEY[idx];
 
   const onSubmit = async () => {
     setTouched(true);
@@ -296,15 +278,11 @@ export default function PostSurvey() {
     if (res.ok) {
       setSubmitted({
         ok: true,
-        message: "Post-learning survey submitted (or queued) successfully.",
+        message: "Post-learning survey submitted successfully.",
       });
-
       window.location.href = "/end";
     } else {
-      setSubmitted({
-        ok: false,
-        message: `Could not submit right now. You can still proceed if your flow allows it. (${res.error})`,
-      });
+      setSubmitted({ ok: false, message: `Submission failed. (${res.error})` });
     }
   };
 
@@ -313,7 +291,7 @@ export default function PostSurvey() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-neutral-200 text-slate-900">
+    <div className="min-h-screen bg-neutral-100 text-slate-900">
       <div
         className={`mx-auto max-w-3xl px-4 py-10 ${showScorePopup && !scorePopupDismissed ? "blur-sm" : ""}`}
       >
@@ -341,22 +319,18 @@ export default function PostSurvey() {
               <h2 className="text-sm font-semibold text-slate-800">
                 {q.id}. {q.prompt}
               </h2>
-
               <div className="mt-4 space-y-2">
                 {(["a", "b", "c"] as Choice[]).map((choice) => {
                   const selected = answers[idx];
                   const correct = correctFor(idx);
-
                   const hasAnswered = selected !== null;
                   const locked = hasAnswered;
-
                   const isSelected = selected === choice;
                   const isCorrectChoice = choice === correct;
 
-                  // Visual states:
-                  const showCorrectHighlight = hasAnswered && isCorrectChoice; // highlight correct once answered
+                  const showCorrectHighlight = hasAnswered && isCorrectChoice;
                   const showIncorrectHighlight =
-                    hasAnswered && isSelected && !isCorrectChoice; // wrong selection red
+                    hasAnswered && isSelected && !isCorrectChoice;
 
                   const base =
                     "flex items-start gap-3 rounded-xl p-3 ring-1 transition-all duration-200";
@@ -366,21 +340,19 @@ export default function PostSurvey() {
                   const neutral = locked
                     ? "bg-white ring-slate-200"
                     : "bg-white ring-slate-200 hover:bg-slate-50";
-
                   const correctStyle = "bg-emerald-100 ring-emerald-400";
                   const incorrectStyle = "bg-red-100 ring-red-400";
 
-                  const labelClass =
-                    `${base} ${interactive} ` +
-                    (showIncorrectHighlight
+                  const labelClass = `${base} ${interactive} ${
+                    showIncorrectHighlight
                       ? incorrectStyle
                       : showCorrectHighlight
                         ? correctStyle
-                        : neutral);
+                        : neutral
+                  }`;
 
                   let feedbackText: string | null = null;
                   let feedbackClass = "text-xs font-semibold";
-
                   if (hasAnswered) {
                     if (isSelected && isCorrectChoice) {
                       feedbackText = "Correct!";
@@ -403,31 +375,28 @@ export default function PostSurvey() {
                         checked={isSelected}
                         disabled={locked}
                         onChange={() => {
-                          if (locked) return;
-                          setAnswer(idx, choice);
+                          if (!locked) setAnswer(idx, choice);
                         }}
                       />
-
                       <div className="flex w-full items-start justify-between gap-3">
                         <span className="text-sm text-slate-700">
                           <span className="font-semibold">{choice})</span>{" "}
                           {q.options[choice]}
                         </span>
-
-                        {feedbackText ? (
+                        {feedbackText && (
                           <span className={feedbackClass}>{feedbackText}</span>
-                        ) : null}
+                        )}
                       </div>
                     </label>
                   );
                 })}
               </div>
 
-              {touched && answers[idx] === null ? (
+              {touched && answers[idx] === null && (
                 <p className="mt-3 text-sm font-medium text-red-600">
                   Please select an answer.
                 </p>
-              ) : null}
+              )}
             </section>
           ))}
 
@@ -436,12 +405,12 @@ export default function PostSurvey() {
               <div className="text-sm text-slate-600">
                 Progress:{" "}
                 <span className="font-semibold text-slate-900">
-                  {answers.filter(Boolean).length}
+                  {answers.filter((a) => a !== null).length}
                 </span>{" "}
                 / {answers.length}
                 <span className="ml-3 text-slate-400">•</span>
                 <span className="ml-3">
-                  Score :{" "}
+                  Score:{" "}
                   <span className="font-semibold text-slate-900">
                     {score.correct}
                   </span>{" "}
@@ -455,7 +424,7 @@ export default function PostSurvey() {
                   allAnswered && !submitting
                     ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 hover:cursor-pointer"
                     : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
-                } transition-all duration-200`}
+                }`}
                 onClick={onSubmit}
                 disabled={!allAnswered || submitting}
               >
@@ -463,19 +432,19 @@ export default function PostSurvey() {
               </button>
             </div>
 
-            {submitted ? (
+            {submitted && (
               <p
                 className={`mt-4 text-sm font-medium ${submitted.ok ? "text-green-700" : "text-amber-700"}`}
               >
                 {submitted.message}
               </p>
-            ) : null}
+            )}
           </section>
         </main>
       </div>
-      {showScorePopup && allAnswered ? (
+
+      {showScorePopup && allAnswered && (
         <div className="fixed inset-0 z-50 flex items-end justify-center p-4">
-          {/* click-off backdrop (optional) */}
           <div
             className="absolute inset-0 bg-black/10"
             onClick={() => {
@@ -483,7 +452,6 @@ export default function PostSurvey() {
               setScorePopupDismissed(true);
             }}
           />
-
           <div className="absolute left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -515,7 +483,7 @@ export default function PostSurvey() {
                 type="button"
                 className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition ${
                   !submitting
-                    ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
+                    ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 hover:cursor-pointer"
                     : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
                 }`}
                 onClick={onSubmit}
@@ -526,7 +494,7 @@ export default function PostSurvey() {
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

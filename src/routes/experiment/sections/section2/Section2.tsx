@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import SectionLearning from "../../components/SectionLearning";
 import SectionTest from "../../components/SectionTest";
 import SectionFinish from "../../components/SectionFinish";
+
 import { Section2LearningData } from "./Section2LearningData";
 import { Section2TestData } from "./Section2TestData";
 import { Section2FinishData } from "./Section2FinishData";
@@ -10,19 +11,16 @@ import TestContext from "../../context/TestContext";
 
 export default function Section2() {
   const [step, setStep] = useState<"learning" | "test" | "finish">("learning");
-
   const ctx = useContext(TestContext);
   if (!ctx) return null;
 
   function handleNext() {
-    console.log("SECTION-2 STEP NEXT CALLED", step);
     if (step === "learning") setStep("test");
     else if (step === "test") setStep("finish");
-    // **do NOT call ctx.next() here for finish**
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-center min-h-full p-4 bg-white">
       {step === "learning" && (
         <SectionLearning
           slides={Section2LearningData}

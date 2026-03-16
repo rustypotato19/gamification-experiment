@@ -22,9 +22,7 @@ async function submitSurvey(params: {
   try {
     const res = await fetch("/api/ux-survey", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
     });
 
@@ -44,19 +42,12 @@ async function submitSurvey(params: {
 }
 
 const QUESTIONS: Question[] = [
-  // Enjoyment
   {
     id: 1,
     dimension: "Enjoyment",
     prompt: "I enjoyed interacting with the learning experience.",
   },
-  {
-    id: 2,
-    dimension: "Enjoyment",
-    prompt: "The activity was entertaining.",
-  },
-
-  // Focused Attention
+  { id: 2, dimension: "Enjoyment", prompt: "The activity was entertaining." },
   {
     id: 3,
     dimension: "Focused Attention",
@@ -67,8 +58,6 @@ const QUESTIONS: Question[] = [
     dimension: "Focused Attention",
     prompt: "I lost track of time while interacting with the experience.",
   },
-
-  // Perceived Learning
   {
     id: 5,
     dimension: "Perceived Learning",
@@ -80,20 +69,12 @@ const QUESTIONS: Question[] = [
     prompt:
       "I understand the environmental impact of generative AI better now.",
   },
-
-  // Usability
-  {
-    id: 7,
-    dimension: "Usability",
-    prompt: "The system was easy to use.",
-  },
+  { id: 7, dimension: "Usability", prompt: "The system was easy to use." },
   {
     id: 8,
     dimension: "Usability",
     prompt: "The interface was clear and understandable.",
   },
-
-  // Challenge
   {
     id: 9,
     dimension: "Challenge",
@@ -104,8 +85,6 @@ const QUESTIONS: Question[] = [
     dimension: "Challenge",
     prompt: "The experience challenged me to think.",
   },
-
-  // Satisfaction
   {
     id: 11,
     dimension: "Satisfaction",
@@ -120,19 +99,15 @@ const QUESTIONS: Question[] = [
 
 export default function UXSurvey() {
   const participantId = getParticipantId();
-
   const [startedAtISO] = useState(() => new Date().toISOString());
-
   const [answers, setAnswers] = useState<(Likert | null)[]>(
     Array(QUESTIONS.length).fill(null),
   );
-
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState<{
     ok: boolean;
     message: string;
   } | null>(null);
-
   const [touched, setTouched] = useState(false);
 
   const allAnswered = useMemo(
@@ -165,7 +140,6 @@ export default function UXSurvey() {
     setSubmitted(null);
 
     const submittedAtISO = new Date().toISOString();
-
     const payloadAnswers = answers.map((a) => a!) as Likert[];
 
     const res = await submitSurvey({
@@ -177,17 +151,15 @@ export default function UXSurvey() {
 
     setSubmitting(false);
 
-    if (res.ok) {
-      setSubmitted({
-        ok: true,
-        message: "Survey submitted successfully. Thank you for participating!",
-      });
-    } else {
-      setSubmitted({
-        ok: false,
-        message: `Could not submit results (${res.error})`,
-      });
-    }
+    setSubmitted(
+      res.ok
+        ? {
+            ok: true,
+            message:
+              "Survey submitted successfully. Thank you for participating!",
+          }
+        : { ok: false, message: `Could not submit results (${res.error})` },
+    );
   };
 
   const likertLabels = [
@@ -199,14 +171,13 @@ export default function UXSurvey() {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-200 text-slate-900">
+    <div className="min-h-screen bg-neutral-100 text-slate-900">
       <div className="mx-auto max-w-3xl px-4 py-10">
         <header className="mb-8">
           <h1 className="text-3xl font-bold">User Experience Survey</h1>
           <p className="mt-2 text-slate-600">
             Please rate your experience using the scale below.
           </p>
-
           <div className="mt-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
             <p className="text-sm text-slate-600">
               Participant ID:{" "}
@@ -233,16 +204,11 @@ export default function UXSurvey() {
               <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-4">
                 {[1, 2, 3, 4, 5].map((value) => {
                   const selected = answers[idx] === value;
-
                   return (
                     <label
                       key={value}
-                      className={`rounded-xl p-3 text-center text-sm ring-1 cursor-pointer transition-all
-                      ${
-                        selected
-                          ? "bg-slate-900 text-white ring-slate-900"
-                          : "bg-white hover:bg-slate-50 ring-slate-200"
-                      }`}
+                      className={`rounded-xl p-3 text-center text-sm ring-1 cursor-pointer transition-all duration-200
+                        ${selected ? "bg-slate-900 text-white ring-slate-900" : "bg-white hover:bg-slate-50 ring-slate-200"}`}
                     >
                       <input
                         type="radio"
@@ -251,7 +217,6 @@ export default function UXSurvey() {
                         checked={selected}
                         onChange={() => setAnswer(idx, value as Likert)}
                       />
-
                       <div className="font-semibold">{value}</div>
                       <div className="text-xs mt-1">
                         {likertLabels[value - 1]}
@@ -261,11 +226,11 @@ export default function UXSurvey() {
                 })}
               </div>
 
-              {touched && answers[idx] === null ? (
+              {touched && answers[idx] === null && (
                 <p className="mt-3 text-sm font-medium text-red-600">
                   Please select an answer.
                 </p>
-              ) : null}
+              )}
             </section>
           ))}
 
@@ -278,14 +243,13 @@ export default function UXSurvey() {
                 </span>{" "}
                 / {answers.length}
               </div>
-
               <button
                 type="button"
                 onClick={onSubmit}
                 disabled={!allAnswered || submitting}
                 className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition-all duration-200 ${
                   allAnswered && !submitting
-                    ? "bg-slate-900 text-white ring-slate-900 hover:bg-slate-500 hover:cursor-pointer"
+                    ? "bg-slate-900 text-white ring-slate-900 hover:bg-slate-700 hover:cursor-pointer"
                     : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
                 }`}
               >
@@ -293,15 +257,13 @@ export default function UXSurvey() {
               </button>
             </div>
 
-            {submitted ? (
+            {submitted && (
               <p
-                className={`mt-4 text-sm font-medium ${
-                  submitted.ok ? "text-green-700" : "text-amber-700"
-                }`}
+                className={`mt-4 text-sm font-medium ${submitted.ok ? "text-green-700" : "text-amber-700"}`}
               >
                 {submitted.message}
               </p>
-            ) : null}
+            )}
           </section>
         </main>
       </div>

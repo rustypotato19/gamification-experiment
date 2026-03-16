@@ -13,7 +13,6 @@ export default function SectionFinish({ title, message }: Props) {
   const tm = ctx && ctx.testMilestonesType;
   const currentIndex = (ctx && ctx.currentIndex) || 0;
 
-  // Enable next section button after 5s
   useEffect(() => {
     if (ctx) {
       ctx.setShowPtsAndStreak(false);
@@ -32,21 +31,25 @@ export default function SectionFinish({ title, message }: Props) {
     tm?.section2Streak,
     tm?.section3Streak,
   ];
+
   const correctMap = [
     tm?.section1Correct,
     tm?.section2Correct,
     tm?.section3Correct,
   ];
+
   const incorrectMap = [
     tm?.section1Incorrect,
     tm?.section2Incorrect,
     tm?.section3Incorrect,
   ];
+
   const startTimeMap = [
     tm?.section1StartTime,
     tm?.section2StartTime,
     tm?.section3StartTime,
   ];
+
   const endTimeMap = [
     tm?.section1EndTime,
     tm?.section2EndTime,
@@ -72,7 +75,6 @@ export default function SectionFinish({ title, message }: Props) {
         ? "bg-yellow-100 text-yellow-700"
         : "bg-red-100 text-red-700";
 
-  // Fire confetti if accuracy > 50%
   useEffect(() => {
     if (hasFiredConfetti.current || total === 0) return;
 
@@ -88,7 +90,6 @@ export default function SectionFinish({ title, message }: Props) {
     hasFiredConfetti.current = true;
   }, [sectionCorrect, sectionIncorrect, total]);
 
-  // Record section end time if null
   useEffect(() => {
     if (!tm) return;
     const now = Date.now();
@@ -103,9 +104,6 @@ export default function SectionFinish({ title, message }: Props) {
       case 2:
         ctx.testMilestonesType.setSection3EndTime(now);
         break;
-      default:
-        console.log(`Some Error occurred\nIndex:: ${currentIndex}`);
-        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -115,7 +113,6 @@ export default function SectionFinish({ title, message }: Props) {
   const pts = (ctx && ctx.pts) || 0;
   const streak = (ctx && ctx.streak) || 0;
 
-  // Upload section data once
   useEffect(() => {
     const pid =
       (ctx && ctx.pid) || localStorage.getItem("participantId") || "null";
@@ -141,67 +138,93 @@ export default function SectionFinish({ title, message }: Props) {
 
     upload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // only on mount
+  }, []);
 
-  // Early return if context not available
   if (!ctx) return null;
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={currentIndex}
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.7 }}
-        className="w-full max-w-2xl flex flex-col items-center text-center bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-black/20"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.6 }}
+        className="
+        w-full
+        max-w-170
+        min-w-0
+        flex flex-col items-center text-center
+        bg-white
+        px-4 sm:px-8
+        py-6 sm:py-8
+        rounded-2xl
+        shadow-lg
+        border border-black/10
+      "
       >
-        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2">{title}</h2>
-        <p className="text-slate-500 mb-8 text-sm sm:text-base">{message}</p>
+        <h2 className="text-xl sm:text-3xl font-bold">{title}</h2>
 
-        {/* Points Burst */}
+        <p className="text-slate-500 mt-2 mb-6 text-sm sm:text-base max-w-prose">
+          {message}
+        </p>
+
+        {/* Points */}
         <motion.div
           key={sectionPts}
-          initial={{ scale: 1.4 }}
+          initial={{ scale: 1.3 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="mb-10"
+          transition={{ duration: 0.35 }}
+          className="mb-8"
         >
-          <div className="text-2xl sm:text-5xl font-extrabold text-emerald-600">
+          <div className="text-2xl sm:text-4xl font-extrabold text-emerald-600">
             +{ctx.formatNumber(sectionPts)} Points
           </div>
+
           <p className="text-sm text-slate-500 mt-1">
             Total Points: {pts?.toLocaleString() ?? 0}
           </p>
         </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-6 w-full mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 w-full mb-8">
           <StatCard label="🔥 Streak Gained" value={sectionStreak ?? 0} />
           <StatCard label="📈 Total Streak" value={streak ?? 0} />
           <StatCard label="⏱ Time Taken" value={timeTaken} />
-          <StatCard
-            label="🎯 Score"
-            value={`${sectionCorrect ?? 0}/${total}`}
-          />
+          <StatCard label="🎯 Score" value={`${sectionCorrect}/${total}`} />
         </div>
 
-        {/* Accuracy Badge */}
+        {/* Accuracy */}
         <div
-          className={`${scoreColor} px-6 py-3 rounded-full font-semibold shadow-sm mb-4`}
+          className={`${scoreColor} px-5 py-2 rounded-full font-semibold shadow-sm mb-6`}
         >
           Accuracy: {scorePercent}%
         </div>
 
-        {/* Next Section Button with fix */}
+        {/* Button */}
         <button
           onClick={() => {
             if (nextSectionDisabled) return;
-            // now increment the global index directly from here
             ctx?.next();
           }}
           disabled={nextSectionDisabled}
-          className="bg-white text-black border px-6 py-3 hover:bg-black hover:text-white transition rounded-full font-semibold shadow-sm hover:cursor-pointer disabled:opacity-25 disabled:bg-white disabled:text-black disabled:cursor-not-allowed"
+          className="
+          w-full sm:w-auto
+          bg-white
+          text-black
+          border
+          px-6 py-3
+          rounded-full
+          font-semibold
+          shadow-sm
+          transition
+          hover:bg-black hover:text-white
+          hover: cursor-pointer
+          disabled:opacity-30
+          disabled:cursor-not-allowed
+          disabled:bg-white
+          disabled:text-black
+        "
         >
           Next Section
         </button>
@@ -212,9 +235,21 @@ export default function SectionFinish({ title, message }: Props) {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2 sm:p-5 shadow-sm hover:shadow-md transition">
-      <p className="text-xs text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="mt-2 text-lg sm:text-2xl font-bold text-slate-800">
+    <div
+      className="
+      min-w-0
+      bg-slate-50
+      border border-slate-200
+      rounded-xl
+      px-2 py-2 sm:px-3 sm:py-3
+      shadow-sm
+    "
+    >
+      <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wide">
+        {label}
+      </p>
+
+      <p className="mt-1 text-lg sm:text-2xl font-bold text-slate-800 wrap-break-word">
         {value}
       </p>
     </div>

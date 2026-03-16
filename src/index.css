@@ -23,6 +23,7 @@
 .animate-grow-once {
   display: inline-block;
   animation: growOnce 1s ease-out forwards;
+  animation-delay: 3s;
 }
 
 .fullscreen-no-margin {

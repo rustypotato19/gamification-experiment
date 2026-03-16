@@ -30,10 +30,7 @@ function getParticipantId(): string {
   return window.localStorage.getItem("participantId") ?? "";
 }
 
-function computeScore(answers: (Choice | null)[]): {
-  correct: number;
-  total: number;
-} {
+function computeScore(answers: (Choice | null)[]) {
   let correct = 0;
   for (let i = 0; i < ANSWER_KEY.length; i++) {
     if (answers[i] && answers[i] === ANSWER_KEY[i]) correct++;
@@ -51,17 +48,12 @@ async function submitSurvey(params: {
   submittedAtISO: string;
 }) {
   try {
-    const res = await fetch(`/api/surveys`, {
+    const res = await fetch("/api/surveys", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(params),
     });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Submission failed: ${res.status} ${text}`.trim());
-    }
-
+    if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
     return { ok: true as const };
   } catch (err) {
     console.error(err);
@@ -73,9 +65,7 @@ async function submitSurvey(params: {
 }
 
 const PRE_QUESTIONS: Question[] = [
-  // =========================
-  // SECTION 1 — AI + DATA CENTRES + INVISIBLE IMPACT
-  // =========================
+  // SECTION 1
   {
     id: 1,
     prompt:
@@ -111,10 +101,7 @@ const PRE_QUESTIONS: Question[] = [
       c: "It's not a concern, AI uses no water",
     },
   },
-
-  // =========================
-  // SECTION 2 — SCALE + ENVIRONMENTAL IMPACT
-  // =========================
+  // SECTION 2
   {
     id: 5,
     prompt: "Which phase of generative AI has the highest environmental cost?",
@@ -169,10 +156,7 @@ const PRE_QUESTIONS: Question[] = [
       c: "9.4 L (~38 glasses)",
     },
   },
-
-  // =========================
-  // SECTION 3 — USER BEHAVIOUR + MITIGATION
-  // =========================
+  // SECTION 3
   {
     id: 11,
     prompt: "Which option is the most energy intensive?",
@@ -186,11 +170,7 @@ const PRE_QUESTIONS: Question[] = [
     id: 12,
     prompt:
       "Which energy source makes generative AI significantly less carbon-intensive?",
-    options: {
-      a: "Coal",
-      b: "Natural gas",
-      c: "Renewable energy",
-    },
+    options: { a: "Coal", b: "Natural gas", c: "Renewable energy" },
   },
   {
     id: 13,
@@ -215,7 +195,7 @@ const PRE_QUESTIONS: Question[] = [
   {
     id: 15,
     prompt:
-      "What is the problem with using generative AI instead of tradtional tools (e.g., search engines, calculators) for simple tasks?",
+      "What is the problem with using generative AI instead of traditional tools (e.g., search engines, calculators) for simple tasks?",
     options: {
       a: "None, AI causes no problems",
       b: "AI has higher hidden environmental costs",
@@ -227,7 +207,7 @@ const PRE_QUESTIONS: Question[] = [
 export default function PreSurvey() {
   const participantId = getParticipantId();
   const [startedAtISO] = useState(() => new Date().toISOString());
-  const [answers, setAnswers] = useState<(Choice | null)[]>(() =>
+  const [answers, setAnswers] = useState<(Choice | null)[]>(
     Array(PRE_QUESTIONS.length).fill(null),
   );
   const [submitting, setSubmitting] = useState(false);
@@ -236,6 +216,8 @@ export default function PreSurvey() {
     message: string;
   } | null>(null);
   const [touched, setTouched] = useState(false);
+  const [showScorePopup, setShowScorePopup] = useState(false);
+  const [scorePopupDismissed, setScorePopupDismissed] = useState(false);
 
   const allAnswered = useMemo(
     () => answers.every((a) => a !== null),
@@ -243,42 +225,31 @@ export default function PreSurvey() {
   );
   const score = useMemo(() => computeScore(answers), [answers]);
 
-  const [showScorePopup, setShowScorePopup] = useState(false);
-  const [scorePopupDismissed, setScorePopupDismissed] = useState(false);
-
   const setAnswer = (idx: number, value: Choice) => {
     setAnswers((prev) => {
       const next = [...prev];
       next[idx] = value;
-
-      // If this click completes the survey, show the popup (unless dismissed)
-      const nowAllAnswered = next.every((a) => a !== null);
-      if (nowAllAnswered && !scorePopupDismissed) {
-        setTimeout(() => {
-          setShowScorePopup(true);
-        }, 400);
+      if (next.every((a) => a !== null) && !scorePopupDismissed) {
+        setTimeout(() => setShowScorePopup(true), 400);
       }
-
       return next;
     });
   };
 
-  const correctFor = (questionIndex: number) => ANSWER_KEY[questionIndex];
+  const correctFor = (idx: number) => ANSWER_KEY[idx];
 
   const onSubmit = async () => {
     setTouched(true);
     if (!participantId) {
       setSubmitted({
         ok: false,
-        message: "Missing participant ID. Please return to the consent page.",
+        message: "Missing participant ID. Please return to consent.",
       });
       return;
     }
     if (!allAnswered) return;
 
     setSubmitting(true);
-    setSubmitted(null);
-
     const submittedAtISO = new Date().toISOString();
     const payloadAnswers = answers.map((a) => a!) as Choice[];
 
@@ -297,15 +268,11 @@ export default function PreSurvey() {
     if (res.ok) {
       setSubmitted({
         ok: true,
-        message: "Pre-learning survey submitted (or queued) successfully.",
+        message: "Pre-learning survey submitted successfully.",
       });
-      // TODO: navigate to the experiment page
       window.location.href = "/experiment";
     } else {
-      setSubmitted({
-        ok: false,
-        message: `Could not submit right now. You can still proceed if your flow allows it. (${res.error})`,
-      });
+      setSubmitted({ ok: false, message: `Submission failed: ${res.error}` });
     }
   };
 
@@ -330,145 +297,112 @@ export default function PreSurvey() {
         </header>
 
         <main className="space-y-5">
-          {PRE_QUESTIONS.map((q, idx) => (
-            <section
-              key={q.id}
-              className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
-            >
-              <h2 className="text-sm font-semibold text-slate-800">
-                {q.id}. {q.prompt}
-              </h2>
-
-              <div className="mt-4 space-y-2">
-                {(["a", "b", "c"] as Choice[]).map((choice) => {
-                  const selected = answers[idx];
-                  const correct = correctFor(idx);
-
-                  const hasAnswered = selected !== null;
-                  const locked = hasAnswered;
-
-                  const isSelected = selected === choice;
-                  const isCorrectChoice = choice === correct;
-
-                  // Only highlight the selected option
-                  const showCorrectHighlight = isSelected && isCorrectChoice;
-                  const showIncorrectHighlight = isSelected && !isCorrectChoice;
-
-                  const base =
-                    "flex items-start gap-3 rounded-xl p-3 ring-1 transition-all duration-200";
-                  const interactive = locked
-                    ? "cursor-not-allowed opacity-90"
-                    : "cursor-pointer";
-                  const neutral = locked
-                    ? "bg-white ring-slate-200"
-                    : "bg-white ring-slate-200 hover:bg-slate-50";
-
-                  const correctStyle = "bg-emerald-100 ring-emerald-400";
-                  const incorrectStyle = "bg-red-100 ring-red-400";
-
-                  const labelClass =
-                    `${base} ${interactive} ` +
-                    (showIncorrectHighlight
-                      ? incorrectStyle
-                      : showCorrectHighlight
-                        ? correctStyle
-                        : neutral);
-
-                  let feedbackText: string | null = null;
-                  let feedbackClass = "text-xs font-semibold";
-
-                  if (isSelected) {
-                    if (isCorrectChoice) {
-                      feedbackText = "Correct!";
-                      feedbackClass += " text-green-700";
-                    } else {
-                      feedbackText = "Incorrect.";
-                      feedbackClass += " text-red-800";
-                    }
-                  }
-
-                  return (
-                    <label key={choice} className={labelClass}>
-                      <input
-                        type="radio"
-                        name={`q${q.id}`}
-                        className="mt-1 h-4 w-4"
-                        checked={isSelected}
-                        disabled={locked}
-                        onChange={() => {
-                          if (locked) return;
-                          setAnswer(idx, choice);
-                        }}
-                      />
-
-                      <div className="flex w-full items-start justify-between gap-3">
-                        <span className="text-sm text-slate-700">
-                          <span className="font-semibold">{choice})</span>{" "}
-                          {q.options[choice]}
-                        </span>
-
-                        {feedbackText ? (
-                          <span className={feedbackClass}>{feedbackText}</span>
-                        ) : null}
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
-
-              {touched && answers[idx] === null ? (
-                <p className="mt-3 text-sm font-medium text-red-600">
-                  Please select an answer.
-                </p>
-              ) : null}
-            </section>
-          ))}
-
-          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-sm text-slate-600">
-                Progress:{" "}
-                <span className="font-semibold text-slate-900">
-                  {answers.filter(Boolean).length}
-                </span>{" "}
-                / {answers.length}
-                <span className="ml-3 text-slate-400">•</span>
-                <span className="ml-3">
-                  Score :{" "}
-                  <span className="font-semibold text-slate-900">
-                    {score.correct}
-                  </span>{" "}
-                  / {score.total}
-                </span>
-              </div>
-
-              <button
-                type="button"
-                className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition ${
-                  allAnswered && !submitting
-                    ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 hover:cursor-pointer"
-                    : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
-                } transition-all duration-200`}
-                onClick={onSubmit}
-                disabled={!allAnswered || submitting}
+          {PRE_QUESTIONS.map((q, idx) => {
+            const selected = answers[idx];
+            const correct = correctFor(idx);
+            return (
+              <section
+                key={q.id}
+                className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
               >
-                {submitting ? "Submitting…" : "Submit & Continue"}
-              </button>
-            </div>
+                <h2 className="text-sm font-semibold text-slate-800">
+                  {q.id}. {q.prompt}
+                </h2>
+                <div className="mt-4 space-y-2">
+                  {(["a", "b", "c"] as Choice[]).map((choice) => {
+                    const isSelected = selected === choice;
+                    const isCorrectChoice = choice === correct;
+                    const showCorrectHighlight = isSelected && isCorrectChoice;
+                    const showIncorrectHighlight =
+                      isSelected && !isCorrectChoice;
 
-            {submitted ? (
+                    const base =
+                      "flex items-start gap-3 rounded-xl p-3 ring-1 transition-all duration-200";
+                    const interactive =
+                      selected !== null
+                        ? "cursor-not-allowed opacity-90"
+                        : "cursor-pointer";
+                    const neutral = "bg-white ring-slate-200 hover:bg-slate-50";
+                    const correctStyle = "bg-emerald-100 ring-emerald-400";
+                    const incorrectStyle = "bg-red-100 ring-red-400";
+
+                    const labelClass = `${base} ${interactive} ${showIncorrectHighlight ? incorrectStyle : showCorrectHighlight ? correctStyle : neutral}`;
+
+                    const feedbackText = isSelected
+                      ? isCorrectChoice
+                        ? "Correct!"
+                        : "Incorrect."
+                      : null;
+                    const feedbackClass = `text-xs font-semibold ${isSelected ? (isCorrectChoice ? "text-green-700" : "text-red-800") : ""}`;
+
+                    return (
+                      <label key={choice} className={labelClass}>
+                        <input
+                          type="radio"
+                          name={`q${q.id}`}
+                          className="mt-1 h-4 w-4"
+                          checked={isSelected}
+                          disabled={selected !== null}
+                          onChange={() =>
+                            selected === null && setAnswer(idx, choice)
+                          }
+                        />
+                        <div className="flex w-full items-start justify-between gap-3">
+                          <span className="text-sm text-slate-700">
+                            <span className="font-semibold">{choice})</span>{" "}
+                            {q.options[choice]}
+                          </span>
+                          {feedbackText && (
+                            <span className={feedbackClass}>
+                              {feedbackText}
+                            </span>
+                          )}
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+                {touched && selected === null && (
+                  <p className="mt-3 text-sm font-medium text-red-600">
+                    Please select an answer.
+                  </p>
+                )}
+              </section>
+            );
+          })}
+
+          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="text-sm text-slate-600">
+              Progress:{" "}
+              <span className="font-semibold text-slate-900">
+                {answers.filter(Boolean).length}
+              </span>{" "}
+              / {answers.length} • Score:{" "}
+              <span className="font-semibold text-slate-900">
+                {score.correct} / {score.total}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={onSubmit}
+              disabled={!allAnswered || submitting}
+              className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition ${allAnswered && !submitting ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 cursor-pointer" : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"}`}
+            >
+              {submitting ? "Submitting…" : "Submit & Continue"}
+            </button>
+            {submitted && (
               <p
                 className={`mt-4 text-sm font-medium ${submitted.ok ? "text-green-700" : "text-amber-700"}`}
               >
                 {submitted.message}
               </p>
-            ) : null}
+            )}
           </section>
         </main>
       </div>
-      {showScorePopup && allAnswered ? (
+
+      {showScorePopup && allAnswered && (
         <div className="fixed inset-0 z-50 flex items-end justify-center p-4">
-          {/* click-off backdrop (optional) */}
           <div
             className="absolute inset-0 bg-black/10"
             onClick={() => {
@@ -476,7 +410,6 @@ export default function PreSurvey() {
               setScorePopupDismissed(true);
             }}
           />
-
           <div className="absolute left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -490,7 +423,6 @@ export default function PreSurvey() {
                   </span>
                 </p>
               </div>
-
               <button
                 type="button"
                 className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 hover:bg-slate-200 cursor-pointer transition-all duration-200"
@@ -502,24 +434,19 @@ export default function PreSurvey() {
                 Close
               </button>
             </div>
-
-            <div className="mt-4 flex items-center justify-end gap-3">
+            <div className="mt-4 flex items-center justify-end">
               <button
                 type="button"
-                className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition ${
-                  !submitting
-                    ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 hover:cursor-pointer transition-all duration-200"
-                    : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
-                }`}
                 onClick={onSubmit}
                 disabled={submitting}
+                className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition ${!submitting ? "bg-slate-900 text-white ring-slate-900 hover:opacity-95 hover:bg-slate-700 cursor-pointer" : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"}`}
               >
                 {submitting ? "Submitting…" : "Submit & Continue"}
               </button>
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

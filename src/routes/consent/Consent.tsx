@@ -97,6 +97,12 @@ export default function InfoConsentPage() {
     [consent],
   );
 
+  const firstThreeChecked = useMemo(
+    () =>
+      consent.readInfoSheet && consent.voluntaryWithdraw && consent.age18Plus,
+    [consent],
+  );
+
   const setConsentField = (field: keyof ConsentState) => (checked: boolean) => {
     setConsent((c) => ({ ...c, [field]: checked }));
   };
@@ -505,15 +511,17 @@ export default function InfoConsentPage() {
               </p>
 
               <div className="mt-4 space-y-3">
-                <label className="flex cursor-pointer items-start gap-3 rounded-xl p-3 hover:bg-slate-50">
+                <label
+                  className={`flex items-start gap-3 rounded-xl p-3 ${consent.understoodAndAgree ? "cursor-not-allowed opacity-75" : "hover:bg-slate-50 cursor-pointer"}`}
+                >
                   <input
                     type="checkbox"
-                    className="mt-1 h-4 w-4 cursor-pointer"
+                    className="mt-1 h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
                     checked={consent.readInfoSheet}
                     onChange={(e) =>
                       setConsentField("readInfoSheet")(e.target.checked)
                     }
-                    disabled={dbBusy}
+                    disabled={dbBusy || consent.understoodAndAgree}
                   />
                   <span className="text-sm text-slate-700">
                     <span className="font-medium">1{")"}</span> I have read and
@@ -521,15 +529,17 @@ export default function InfoConsentPage() {
                   </span>
                 </label>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-xl p-3 hover:bg-slate-50">
+                <label
+                  className={`flex items-start gap-3 rounded-xl p-3 ${consent.understoodAndAgree ? "cursor-not-allowed opacity-75" : "hover:bg-slate-50 cursor-pointer"}`}
+                >
                   <input
                     type="checkbox"
-                    className="mt-1 h-4.5 w-4.5 cursor-pointer"
+                    className="mt-1 h-4.5 w-4.5 cursor-pointer disabled:cursor-not-allowed"
                     checked={consent.voluntaryWithdraw}
                     onChange={(e) =>
                       setConsentField("voluntaryWithdraw")(e.target.checked)
                     }
-                    disabled={dbBusy}
+                    disabled={dbBusy || consent.understoodAndAgree}
                   />
                   <span className="text-sm text-slate-700">
                     <span className="font-medium">2{")"}</span> I understand
@@ -538,15 +548,17 @@ export default function InfoConsentPage() {
                   </span>
                 </label>
 
-                <label className="flex cursor-pointer items-start gap-3 rounded-xl p-3 hover:bg-slate-50">
+                <label
+                  className={`flex items-start gap-3 rounded-xl p-3 ${consent.understoodAndAgree ? "cursor-not-allowed opacity-75" : "hover:bg-slate-50 cursor-pointer"}`}
+                >
                   <input
                     type="checkbox"
-                    className="mt-1 h-4 w-4 cursor-pointer"
+                    className="mt-1 h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
                     checked={consent.age18Plus}
                     onChange={(e) =>
                       setConsentField("age18Plus")(e.target.checked)
                     }
-                    disabled={dbBusy}
+                    disabled={dbBusy || consent.understoodAndAgree}
                   />
                   <span className="text-sm text-slate-700">
                     <span className="font-medium">3{")"}</span> I confirm that I
@@ -555,21 +567,25 @@ export default function InfoConsentPage() {
                 </label>
 
                 <div className="mt-2 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                  <label className="flex cursor-pointer items-start gap-3">
+                  <label
+                    className={`flex items-start gap-3 ${firstThreeChecked ? "cursor-pointer" : "cursor-not-allowed"}`}
+                  >
                     <input
                       type="checkbox"
-                      className="mt-1 h-4.5 w-4.5 cursor-pointer"
+                      className="mt-1 h-5 w-5 cursor-pointer"
                       checked={consent.understoodAndAgree}
                       onChange={(e) =>
                         setConsentField("understoodAndAgree")(e.target.checked)
                       }
-                      disabled={dbBusy}
+                      disabled={dbBusy || !firstThreeChecked}
                     />
-                    <span className="text-sm text-slate-700">
+                    <span
+                      className={`text-sm sm:text-base ${firstThreeChecked ? "text-slate-700" : "text-slate-700/60"}`}
+                    >
                       <span className="font-semibold">By checking here</span>,
                       you confirm that you have read through and understand the
                       above conditions and are agreeing to continue.
-                      <span className="block text-xs text-slate-500">
+                      <span className="block text-xs sm:text-sm text-slate-500">
                         (Required)
                       </span>
                     </span>
@@ -625,7 +641,7 @@ export default function InfoConsentPage() {
             </section>
 
             <footer className="pt-2 text-center text-xs text-slate-500">
-              © {new Date().getFullYear()} — York St John University (Study
+              © {new Date().getFullYear()} - York St John University (Study
               participant page)
             </footer>
           </main>
