@@ -14,7 +14,7 @@ export default function ExperimentContainer() {
   if (!ctx) return null;
 
   const currentIndex = ctx.currentIndex;
-  const current = experimentSectionData[currentIndex];
+  const current = experimentSectionData[currentIndex] || null;
 
   if (!current) {
     // All sections completed → optional final screen

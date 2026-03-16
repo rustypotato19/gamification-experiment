@@ -22,8 +22,9 @@ function TestInner({ participantId }: Props) {
 
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const totalSteps =
-    (ctx && experimentSectionData[ctx.currentIndex].learning.length) || 0;
+  const sectionData = experimentSectionData[ctx?.currentIndex ?? 0];
+
+  const totalSteps = sectionData?.learning?.length ?? 1;
 
   const sections = experimentSections;
 

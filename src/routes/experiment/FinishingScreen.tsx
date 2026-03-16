@@ -1,9 +1,17 @@
 import { motion } from "framer-motion";
+import { useContext, useEffect } from "react";
+import TestContext from "./context/TestContext";
 
 export default function FinishingScreen() {
   const handleContinue = () => {
     window.location.href = "/post";
   };
+
+  const ctx = useContext(TestContext);
+
+  useEffect(() => {
+    ctx?.setShowSectionProgressPercent(false);
+  });
 
   return (
     <div className="h-full flex flex-col items-center justify-center px-4">

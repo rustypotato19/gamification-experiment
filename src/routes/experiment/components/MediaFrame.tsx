@@ -8,7 +8,7 @@ export default function MediaFrame({ src, alt }: Props) {
     <div
       className="
       w-full
-      max-w-2xl
+      max-w-3/4
       mx-auto
       flex
       items-center

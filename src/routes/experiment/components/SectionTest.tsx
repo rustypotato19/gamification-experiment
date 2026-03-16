@@ -32,7 +32,8 @@ export default function SectionTest({ questions, onComplete }: Props) {
   const [selected, setSelected] = useState<Choice | null>(null);
 
   const [popup, setPopup] = useState<{
-    points: number;
+    points?: number;
+    streak?: number;
     x: number;
     y: number;
   } | null>(null);
@@ -77,6 +78,16 @@ export default function SectionTest({ questions, onComplete }: Props) {
       }
     } else {
       ctx.addIncorrect();
+
+      const rect = containerRef.current?.getBoundingClientRect();
+
+      if (rect) {
+        setPopup({
+          streak: -1,
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
+      }
     }
 
     setSelected(choice);
@@ -102,8 +113,11 @@ export default function SectionTest({ questions, onComplete }: Props) {
         relative
         bg-white
         w-full
-        max-w-xl
+        max-w-[80dvw]
+        sm:max-w-[40dvw]
         mx-auto
+        max-h-[70dvh]
+        sm:max-h-[60dvh]
         p-4 sm:p-6
         rounded-xl sm:rounded-2xl
         drop-shadow-lg
@@ -123,7 +137,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
           </h2>
 
           <div className="text-sm sm:text-base font-semibold text-orange-500">
-            🔥 {ctx.streak}
+            <span className="animate-pulse duration-75">🔥</span> {ctx.streak}
           </div>
         </div>
 
@@ -139,7 +153,7 @@ export default function SectionTest({ questions, onComplete }: Props) {
 
         {/* Floating Points Popup */}
         <AnimatePresence>
-          {popup && (
+          {popup?.points && (
             <motion.div
               key={popup.points + popup.x}
               initial={{ opacity: 0, y: 0, scale: 0.7 }}
@@ -174,11 +188,48 @@ export default function SectionTest({ questions, onComplete }: Props) {
           )}
         </AnimatePresence>
 
+        {/* Floating Negative Popup */}
+        <AnimatePresence>
+          {popup?.streak && (
+            <motion.div
+              key={popup.x}
+              initial={{ opacity: 0, y: 0, scale: 0.7 }}
+              animate={{ opacity: 1, y: -150, scale: 0.9 }}
+              exit={{ opacity: 0, y: -100 }}
+              transition={{ duration: 1.5 }}
+              style={{
+                position: "absolute",
+                left: popup.x,
+                top: popup.y,
+              }}
+              className="
+                pointer-events-none
+                -translate-x-1/2
+                -translate-y-1/2
+                px-6
+                py-2
+                rounded-full
+                backdrop-blur-md
+                bg-white/50
+                border
+                border-red-300
+                text-red-600
+                font-extrabold
+                text-xl sm:text-2xl
+                shadow-lg
+                select-none
+              "
+            >
+              {ctx.streak != 0 ? "Streak Lost!" : "Incorrect!"}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Answers */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           {(["a", "b", "c"] as Choice[]).map((choice) => {
             let style = `
-              p-4
+              p-2
               rounded-xl
               ring-1
               text-sm sm:text-base

@@ -15,7 +15,8 @@ export default function TestProvider({ children }: Props) {
     () => localStorage.getItem("participantId") || "",
   );
   const [sectionProgressPercent, setSectionProgressPercent] = useState(0);
-  const [showSectionProgressPercent, setShowSectionProgressPercent] = useState(false)
+  const [showSectionProgressPercent, setShowSectionProgressPercent] =
+    useState(false);
   const [sectionStep, setSectionStep] = useState<number>(0);
 
   // Section 1
@@ -129,8 +130,12 @@ export default function TestProvider({ children }: Props) {
   };
 
   function getSectionProgressPercent() {
-    const totalSteps = experimentSectionData[currentIndex].learning.length;
-    const percent = totalSteps > 1 ? (sectionStep / (totalSteps-1)) * 100 : 100;
+    const sectionData = experimentSectionData[currentIndex ?? 0];
+
+    const totalSteps = sectionData?.learning?.length ?? 1;
+
+    const percent =
+      totalSteps > 1 ? (sectionStep / (totalSteps - 1)) * 100 : 100;
     setSectionProgressPercent(percent);
 
     return sectionProgressPercent;

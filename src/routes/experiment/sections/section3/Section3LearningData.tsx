@@ -119,11 +119,8 @@ export const Section3LearningData: Step[] = [
     title: "Your Usage",
 
     text: (
-      <div className="flex flex-col justify-center items-center px-6">
-        <img
-          src="/images/intentional-prompts.png"
-          className="max-w-full sm:max-w-150"
-        />
+      <div className="flex flex-col justify-center items-center sm:px-6 w-fit max-w-[90dvw] sm:max-w-[60dvw]">
+        <img src="/images/intentional-prompts.png" className="max-w-full" />
       </div>
     ),
   },
