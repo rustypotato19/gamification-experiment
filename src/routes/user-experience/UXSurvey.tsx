@@ -110,6 +110,13 @@ export default function UXSurvey() {
   } | null>(null);
   const [touched, setTouched] = useState(false);
 
+  // Persist one-time submission
+  const [alreadySubmitted, setAlreadySubmitted] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem("surveySubmitted") === "true",
+  );
+
   const allAnswered = useMemo(
     () => answers.every((a) => a !== null),
     [answers],
@@ -134,7 +141,7 @@ export default function UXSurvey() {
       return;
     }
 
-    if (!allAnswered) return;
+    if (!allAnswered || alreadySubmitted) return;
 
     setSubmitting(true);
     setSubmitted(null);
@@ -151,15 +158,19 @@ export default function UXSurvey() {
 
     setSubmitting(false);
 
-    setSubmitted(
-      res.ok
-        ? {
-            ok: true,
-            message:
-              "Survey submitted successfully. Thank you for participating!",
-          }
-        : { ok: false, message: `Could not submit results (${res.error})` },
-    );
+    if (res.ok) {
+      localStorage.setItem("surveySubmitted", "true");
+      setAlreadySubmitted(true);
+      setSubmitted({
+        ok: true,
+        message: "Survey submitted successfully. Thank you for participating!",
+      });
+    } else {
+      setSubmitted({
+        ok: false,
+        message: `Could not submit results (${res.error})`,
+      });
+    }
   };
 
   const likertLabels = [
@@ -216,6 +227,7 @@ export default function UXSurvey() {
                         className="hidden"
                         checked={selected}
                         onChange={() => setAnswer(idx, value as Likert)}
+                        disabled={alreadySubmitted}
                       />
                       <div className="font-semibold">{value}</div>
                       <div className="text-xs mt-1">
@@ -243,17 +255,27 @@ export default function UXSurvey() {
                 </span>{" "}
                 / {answers.length}
               </div>
+
               <button
                 type="button"
                 onClick={onSubmit}
-                disabled={!allAnswered || submitting}
+                disabled={
+                  !allAnswered ||
+                  submitting ||
+                  submitted?.ok ||
+                  alreadySubmitted
+                }
                 className={`rounded-2xl px-5 py-3 text-sm font-semibold shadow-sm ring-1 transition-all duration-200 ${
-                  allAnswered && !submitting
+                  allAnswered && !submitting && !submitted && !alreadySubmitted
                     ? "bg-slate-900 text-white ring-slate-900 hover:bg-slate-700 hover:cursor-pointer"
                     : "bg-slate-200 text-slate-500 ring-slate-200 cursor-not-allowed"
                 }`}
               >
-                {submitting ? "Submitting…" : "Submit Survey"}
+                {submitting
+                  ? "Submitting…"
+                  : alreadySubmitted
+                    ? "Survey Already Submitted"
+                    : "Submit Survey"}
               </button>
             </div>
 
