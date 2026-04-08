@@ -54,7 +54,7 @@ async function postJson<T>(
 }
 
 export default function InfoConsentPage() {
-  const experimentEndsISO = "2026-03-31T23:59:59";
+  const experimentEndsISO = "2026-04-20T23:59:59";
 
   useEffect(() => {
     if (localStorage.getItem("withdrawn")) window.location.href = "/withdrawn";
@@ -410,7 +410,7 @@ export default function InfoConsentPage() {
                   <li>
                     <span className="font-medium">Experiment end time:</span>{" "}
                     The experiment will conclude on{" "}
-                    <span className="font-medium">31/03/2026 at 23:59</span>.
+                    <span className="font-medium">20/04/2026 at 23:59</span>.
                     <span className="block text-xs text-slate-500">
                       (Displayed in your local format:{" "}
                       {formatLocalDateTime(experimentEndsISO)})
